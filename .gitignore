@@ -1,0 +1,5 @@
+# Python virtual environment
+venv/
+
+# STM32 secrets
+SECRETS_H.h

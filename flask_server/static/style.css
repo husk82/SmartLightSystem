@@ -1,0 +1,22 @@
+body {
+    font-family: Arial, sans-serif;
+    text-align: center;
+    background-color: #111;
+    color: #f1f1f1;
+    padding: 20px;
+}
+
+.card {
+    display: inline-block;
+    background-color: #222;
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 0 15px #00ffcc;
+    margin-top: 20px;
+}
+a {
+    color: #00ffcc;
+    text-decoration: none;
+    display: block;
+    margin-top: 20px;
+}

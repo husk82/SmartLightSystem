@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Smart Light Dashboard</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <h1>Smart Light Monitor</h1>
+    <div class="card">
+        {% if data.lux %}
+            <p><strong>Current Lux:</strong> {{ data.lux }}</p>
+            <p><strong>Last Updated:</strong> {{ data.timestamp }}</p>
+        {% else %}
+            <p>No data received yet.</p>
+        {% endif %}
+    </div>
+    <a href="/about">About Me</a>
+</body>
+</html>
