@@ -1,41 +1,25 @@
-Smart Light Automation System
+### STM32 Firmware
+- Reads data from TSL2591 light sensor.
+- Controls LEDs based on ambient light.
+- Sends data over WiFi to the Flask server.
 
-A smart lighting project using STM32F446RE, TSL2591 light sensor, ESP8266, and OLED display, paired with a Flask web server for real-time monitoring.
+### Flask Server
+- Receives lux data from STM32.
+- Displays current lux readings on a web page.
+- Includes an "About Me" section and project description.
+- Can be extended to use PostgreSQL for data storage.
 
-Features
+## Getting Started
 
-Reads ambient light and adjusts LED brightness via PWM
+### STM32
+- Build and flash the firmware using STM32CubeIDE or Makefile.
+- Ensure WiFi credentials are configured in `SECRETS_H.h`.
 
-Displays lux and WiFi status on OLED
-
-Sends lux data to a Flask server running on Raspberry Pi 5
-
-Simple web interface with current data and project description
-
-Hardware
-
-STM32F446RE, TSL2591 sensor, OLED, ESP8266, LEDs
-
-Raspberry Pi 5 for Flask server
-
-Software
-
-STM32 firmware (C)
-
-Flask web server (Python)
-
-Setup
-
-Flash STM32 firmware
-
-Run Flask server on Raspberry Pi
-
-Access data via browser at http://<raspberry_pi_ip>:5000
-
-Future Improvements
-
-Store lux data in PostgreSQL
-
-Add interactive graphs and analytics
-
-Expand multi-sensor support
+### Flask Server
+```bash
+cd flask-server
+python -m venv venv
+source venv/bin/activate   # Linux/Mac
+venv\Scripts\activate      # Windows
+pip install -r requirements.txt
+python run.py
