@@ -8,6 +8,7 @@
 	#include "ESP_H.h"
 	#include "SSD1306_H.h"
 	#include <stdio.h>
+	#include <string.h>
 
 	// Global variables for PINS
 	uint8_t LED1_PIN = 6;
@@ -160,14 +161,10 @@
 	// --- ESP Init Status ---
   bool esp_ok = ESP_Init(); // your ESP_Init should use USART1
   char esp_status[16];
-  if (esp_ok) sprintf(esp_status, "ESP: OK");
-  else sprintf(esp_status, "ESP: FAIL");
 	
 	// --- ESP Connect to wifi ----
 	if (esp_ok) ESP_ConnectWiFi();
 	char wifi_status[16];
-	if (ESP_WiFiStatus()) sprintf(wifi_status, "WiFi: OK");
-	else sprintf(wifi_status, "WiFi: FAIL");
 
 	while (1)
 	{	
@@ -189,6 +186,30 @@
 			TIM_PWM_set_duty(&pwm2, 999 - duty); 
 
 			sprintf(buffer1, "Lux: %u", lux);
+			
+			if (esp_ok) sprintf(esp_status, "ESP: OK");
+			else sprintf(esp_status, "ESP: FAIL");
+			
+			if (ESP_WiFiStatus()) sprintf(wifi_status, "WiFi: OK");
+			else sprintf(wifi_status, "WiFi: FAIL");
+			
+			char json_payload[32];
+			int json_len = snprintf(json_payload, sizeof(json_payload), "{\"lux\": %lu}", lux);
+
+			char post_data[128];
+			int post_len = snprintf(post_data, sizeof(post_data),
+					"POST /api/lux HTTP/1.1\r\n"
+					"Host: 192.168.2.12\r\n"
+					"Content-Type: application/json\r\n"
+					"Content-Length: %d\r\n\r\n%s",
+					json_len, json_payload);
+
+			if (ESP_OpenTCP("192.168.2.12", 5000)) 
+			{
+				ESP_SendData(post_data, post_len);
+				ESP_CloseTCP();
+			}
+		
 		}
 
 		for (volatile int i = 0; i < 100000; ++i); // Small delay

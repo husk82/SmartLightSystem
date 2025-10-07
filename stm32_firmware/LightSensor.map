@@ -22,15 +22,19 @@ Section Cross References
     main.o(.text.main) refers to ssd1306.o(.text.SSD1306_init) for SSD1306_init
     main.o(.text.main) refers to usart_driver.o(.text.USART_init) for USART_init
     main.o(.text.main) refers to esp.o(.text.ESP_Init) for ESP_Init
-    main.o(.text.main) refers to main.o(.rodata.str1.1) for .L.str
-    main.o(.text.main) refers to sprintf.o(.text) for sprintf
     main.o(.text.main) refers to esp.o(.text.ESP_ConnectWiFi) for ESP_ConnectWiFi
-    main.o(.text.main) refers to esp.o(.text.ESP_WiFiStatus) for ESP_WiFiStatus
     main.o(.text.main) refers to tsl2591.o(.text.TSL2591_read_ch0) for TSL2591_read_ch0
     main.o(.text.main) refers to tsl2591.o(.text.TSL2591_read_ch1) for TSL2591_read_ch1
+    main.o(.text.main) refers to main.o(.rodata.str1.1) for .L.str
+    main.o(.text.main) refers to sprintf.o(.text) for sprintf
     main.o(.text.main) refers to tsl2591.o(.text.TSL2591_calculate_lux) for TSL2591_calculate_lux
     main.o(.text.main) refers to main.o(.text.scale_lux_to_pwm) for scale_lux_to_pwm
     main.o(.text.main) refers to tim_driver.o(.text.TIM_PWM_set_duty) for TIM_PWM_set_duty
+    main.o(.text.main) refers to esp.o(.text.ESP_WiFiStatus) for ESP_WiFiStatus
+    main.o(.text.main) refers to snprintf.o(.text) for snprintf
+    main.o(.text.main) refers to esp.o(.text.ESP_OpenTCP) for ESP_OpenTCP
+    main.o(.text.main) refers to esp.o(.text.ESP_SendData) for ESP_SendData
+    main.o(.text.main) refers to esp.o(.text.ESP_CloseTCP) for ESP_CloseTCP
     main.o(.text.main) refers to ssd1306.o(.text.SSD1306_clear) for SSD1306_clear
     main.o(.text.main) refers to ssd1306.o(.text.SSD1306_draw_string) for SSD1306_draw_string
     main.o(.text.main) refers to ssd1306.o(.text.SSD1306_update) for SSD1306_update
@@ -592,13 +596,10 @@ Removing Unused input sections from the image.
     Removing esp.o(.ARM.exidx.text.ESP_SendAT), (8 bytes).
     Removing esp.o(.ARM.exidx.text.ESP_ConnectWiFi), (8 bytes).
     Removing esp.o(.ARM.exidx.text.ESP_WiFiStatus), (8 bytes).
-    Removing esp.o(.text.ESP_OpenTCP), (66 bytes).
     Removing esp.o(.ARM.exidx.text.ESP_OpenTCP), (8 bytes).
-    Removing esp.o(.text.ESP_SendData), (118 bytes).
     Removing esp.o(.ARM.exidx.text.ESP_SendData), (8 bytes).
     Removing esp.o(.ARM.exidx.text.ESP_UART_SendString), (8 bytes).
     Removing esp.o(.ARM.exidx.text.ESP_UART_ReadResponse), (8 bytes).
-    Removing esp.o(.text.ESP_CloseTCP), (28 bytes).
     Removing esp.o(.ARM.exidx.text.ESP_CloseTCP), (8 bytes).
     Removing system_stm32f4xx.o(.text), (0 bytes).
     Removing system_stm32f4xx.o(.ARM.exidx.text.SystemInit), (8 bytes).
@@ -608,7 +609,7 @@ Removing Unused input sections from the image.
     Removing system_stm32f4xx.o(.rodata.AHBPrescTable), (16 bytes).
     Removing system_stm32f4xx.o(.rodata.APBPrescTable), (8 bytes).
 
-87 unused section(s) (total 2323 bytes) removed from the image.
+84 unused section(s) (total 2111 bytes) removed from the image.
 
 ==============================================================================
 
@@ -886,124 +887,130 @@ Image Symbol Table
     .text                                    0x08001574   Section        0  sys_exit.o(.text)
     .text                                    0x08001580   Section        2  use_no_semi.o(.text)
     .text                                    0x08001582   Section        0  indicate_semi.o(.text)
-    [Anonymous Symbol]                       0x08001584   Section        0  esp.o(.text.ESP_ConnectWiFi)
-    [Anonymous Symbol]                       0x080015c8   Section        0  esp.o(.text.ESP_Init)
-    ESP_SendAT                               0x08001625   Thumb Code    54  esp.o(.text.ESP_SendAT)
-    [Anonymous Symbol]                       0x08001624   Section        0  esp.o(.text.ESP_SendAT)
-    ESP_UART_ReadResponse                    0x0800165d   Thumb Code   136  esp.o(.text.ESP_UART_ReadResponse)
-    [Anonymous Symbol]                       0x0800165c   Section        0  esp.o(.text.ESP_UART_ReadResponse)
-    ESP_UART_SendString                      0x080016e5   Thumb Code    24  esp.o(.text.ESP_UART_SendString)
-    [Anonymous Symbol]                       0x080016e4   Section        0  esp.o(.text.ESP_UART_SendString)
-    [Anonymous Symbol]                       0x080016fc   Section        0  esp.o(.text.ESP_WiFiStatus)
-    GPIO_clock_enable                        0x08001739   Thumb Code   292  gpio_driver.o(.text.GPIO_clock_enable)
-    [Anonymous Symbol]                       0x08001738   Section        0  gpio_driver.o(.text.GPIO_clock_enable)
-    [Anonymous Symbol]                       0x0800185c   Section        0  gpio_driver.o(.text.GPIO_init)
-    [Anonymous Symbol]                       0x08001908   Section        0  i2c_driver.o(.text.I2C_init)
-    [Anonymous Symbol]                       0x08001a5c   Section        0  i2c_driver.o(.text.I2C_read_nack)
-    [Anonymous Symbol]                       0x08001a8c   Section        0  i2c_driver.o(.text.I2C_start)
-    [Anonymous Symbol]                       0x08001b48   Section        0  i2c_driver.o(.text.I2C_stop)
-    [Anonymous Symbol]                       0x08001b5c   Section        0  i2c_driver.o(.text.I2C_write)
-    [Anonymous Symbol]                       0x08001b90   Section        0  ssd1306.o(.text.SSD1306_clear)
-    [Anonymous Symbol]                       0x08001ba4   Section        0  ssd1306.o(.text.SSD1306_draw_char)
-    [Anonymous Symbol]                       0x08001c5c   Section        0  ssd1306.o(.text.SSD1306_draw_pixel)
-    [Anonymous Symbol]                       0x08001ce4   Section        0  ssd1306.o(.text.SSD1306_draw_string)
-    [Anonymous Symbol]                       0x08001d20   Section        0  ssd1306.o(.text.SSD1306_init)
-    [Anonymous Symbol]                       0x08001e18   Section        0  ssd1306.o(.text.SSD1306_update)
-    [Anonymous Symbol]                       0x08001e78   Section        0  ssd1306.o(.text.SSD1306_write_command)
-    [Anonymous Symbol]                       0x08001eac   Section        0  ssd1306.o(.text.SSD1306_write_data)
-    [Anonymous Symbol]                       0x08001f08   Section        0  system_stm32f4xx.o(.text.SystemInit)
-    [Anonymous Symbol]                       0x08001f1c   Section        0  tim_driver.o(.text.TIM_PWM_init)
-    [Anonymous Symbol]                       0x08002034   Section        0  tim_driver.o(.text.TIM_PWM_set_duty)
-    [Anonymous Symbol]                       0x08002090   Section        0  tsl2591.o(.text.TSL2591_calculate_lux)
-    [Anonymous Symbol]                       0x080021a4   Section        0  tsl2591.o(.text.TSL2591_init)
-    [Anonymous Symbol]                       0x080021c4   Section        0  tsl2591.o(.text.TSL2591_read)
-    [Anonymous Symbol]                       0x08002214   Section        0  tsl2591.o(.text.TSL2591_read_ch0)
-    [Anonymous Symbol]                       0x08002244   Section        0  tsl2591.o(.text.TSL2591_read_ch1)
-    [Anonymous Symbol]                       0x08002274   Section        0  tsl2591.o(.text.TSL2591_write)
-    [Anonymous Symbol]                       0x080022b8   Section        0  usart_driver.o(.text.USART_ReceiveChar)
-    [Anonymous Symbol]                       0x080022d8   Section        0  usart_driver.o(.text.USART_SendChar)
-    [Anonymous Symbol]                       0x080022fc   Section        0  usart_driver.o(.text.USART_SendString)
-    [Anonymous Symbol]                       0x08002324   Section        0  usart_driver.o(.text.USART_init)
-    enable_tim_clock                         0x08002471   Thumb Code   502  tim_driver.o(.text.enable_tim_clock)
-    [Anonymous Symbol]                       0x08002470   Section        0  tim_driver.o(.text.enable_tim_clock)
-    gpio_config_alt_func                     0x08002669   Thumb Code    90  gpio_driver.o(.text.gpio_config_alt_func)
-    [Anonymous Symbol]                       0x08002668   Section        0  gpio_driver.o(.text.gpio_config_alt_func)
-    gpio_config_mode                         0x080026c5   Thumb Code    54  gpio_driver.o(.text.gpio_config_mode)
-    [Anonymous Symbol]                       0x080026c4   Section        0  gpio_driver.o(.text.gpio_config_mode)
-    gpio_config_otype                        0x080026fd   Thumb Code    50  gpio_driver.o(.text.gpio_config_otype)
-    [Anonymous Symbol]                       0x080026fc   Section        0  gpio_driver.o(.text.gpio_config_otype)
-    gpio_config_pupd                         0x08002731   Thumb Code    54  gpio_driver.o(.text.gpio_config_pupd)
-    [Anonymous Symbol]                       0x08002730   Section        0  gpio_driver.o(.text.gpio_config_pupd)
-    gpio_config_speed                        0x08002769   Thumb Code    54  gpio_driver.o(.text.gpio_config_speed)
-    [Anonymous Symbol]                       0x08002768   Section        0  gpio_driver.o(.text.gpio_config_speed)
-    [Anonymous Symbol]                       0x080027a0   Section        0  main.o(.text.main)
-    [Anonymous Symbol]                       0x08002b54   Section        0  main.o(.text.scale_lux_to_pwm)
-    CL$$btod_d2e                             0x08002bc2   Section       62  btod.o(CL$$btod_d2e)
-    CL$$btod_d2e_denorm_low                  0x08002c00   Section       70  btod.o(CL$$btod_d2e_denorm_low)
-    CL$$btod_d2e_norm_op1                    0x08002c46   Section       96  btod.o(CL$$btod_d2e_norm_op1)
-    CL$$btod_div_common                      0x08002ca8   Section      824  btod.o(CL$$btod_div_common)
-    CL$$btod_e2e                             0x08002fe0   Section      220  btod.o(CL$$btod_e2e)
-    CL$$btod_ediv                            0x080030bc   Section       42  btod.o(CL$$btod_ediv)
-    CL$$btod_emul                            0x080030e6   Section       42  btod.o(CL$$btod_emul)
-    CL$$btod_mult_common                     0x08003110   Section      580  btod.o(CL$$btod_mult_common)
-    i.__ARM_fpclassify                       0x08003354   Section        0  fpclassify.o(i.__ARM_fpclassify)
-    i._is_digit                              0x08003384   Section        0  __printf_wp.o(i._is_digit)
-    locale$$code                             0x08003394   Section       44  lc_numeric_c.o(locale$$code)
-    locale$$code                             0x080033c0   Section       44  lc_ctype_c.o(locale$$code)
-    $v0                                      0x080033ec   Number         0  fpinit.o(x$fpl$fpinit)
-    x$fpl$fpinit                             0x080033ec   Section       26  fpinit.o(x$fpl$fpinit)
-    $v0                                      0x08003406   Number         0  printf1.o(x$fpl$printf1)
-    x$fpl$printf1                            0x08003406   Section        4  printf1.o(x$fpl$printf1)
-    $v0                                      0x0800340a   Number         0  printf2.o(x$fpl$printf2)
-    x$fpl$printf2                            0x0800340a   Section        4  printf2.o(x$fpl$printf2)
-    x$fpl$usenofp                            0x0800340e   Section        0  usenofp.o(x$fpl$usenofp)
-    initial_mbstate                          0x08003410   Data           8  _printf_wctomb.o(.constdata)
-    .constdata                               0x08003410   Section        8  _printf_wctomb.o(.constdata)
-    uc_hextab                                0x08003418   Data          20  _printf_hex_int_ll_ptr.o(.constdata)
-    .constdata                               0x08003418   Section       40  _printf_hex_int_ll_ptr.o(.constdata)
-    lc_hextab                                0x0800342c   Data          20  _printf_hex_int_ll_ptr.o(.constdata)
-    maptable                                 0x08003440   Data          17  __printf_flags_ss_wp.o(.constdata)
-    .constdata                               0x08003440   Section       17  __printf_flags_ss_wp.o(.constdata)
-    lc_hextab                                0x08003451   Data          19  _printf_fp_hex.o(.constdata)
-    .constdata                               0x08003451   Section       38  _printf_fp_hex.o(.constdata)
-    uc_hextab                                0x08003464   Data          19  _printf_fp_hex.o(.constdata)
-    tenpwrs_x                                0x08003478   Data          60  bigflt0.o(.constdata)
-    .constdata                               0x08003478   Section      148  bigflt0.o(.constdata)
-    tenpwrs_i                                0x080034b4   Data          64  bigflt0.o(.constdata)
-    .L.str                                   0x08003804   Data           8  main.o(.rodata.str1.1)
-    [Anonymous Symbol]                       0x08003804   Section        0  main.o(.rodata.str1.1)
-    .L.str.2                                 0x0800380c   Data           9  main.o(.rodata.str1.1)
-    .L.str.1                                 0x08003815   Data          10  main.o(.rodata.str1.1)
-    .L.str.3                                 0x0800381f   Data          11  main.o(.rodata.str1.1)
-    .L.str.4                                 0x0800382a   Data          14  main.o(.rodata.str1.1)
-    .L.str.5                                 0x08003838   Data           8  main.o(.rodata.str1.1)
-    .L.str.14                                0x08003840   Data           3  esp.o(.rodata.str1.1)
-    [Anonymous Symbol]                       0x08003840   Section        0  esp.o(.rodata.str1.1)
-    .L.str.3                                 0x08003843   Data          19  esp.o(.rodata.str1.1)
-    .L.str.2                                 0x08003856   Data          12  esp.o(.rodata.str1.1)
-    .L.str.5                                 0x08003862   Data          13  esp.o(.rodata.str1.1)
-    .L.str.4                                 0x0800386f   Data           8  esp.o(.rodata.str1.1)
-    .L.str.7                                 0x08003879   Data          10  esp.o(.rodata.str1.1)
-    .L.str.1                                 0x08003894   Data           3  esp.o(.rodata.str1.1)
-    .L.str.9                                 0x08003896   Data          26  esp.o(.rodata.str1.1)
-    .L.str.8                                 0x08003897   Data           6  esp.o(.rodata.str1.1)
-    .L.str.6                                 0x0800389d   Data          12  esp.o(.rodata.str1.1)
-    .L.str                                   0x080038a9   Data           3  esp.o(.rodata.str1.1)
-    .L.str.10                                0x080038b0   Data          14  esp.o(.rodata.str1.1)
-    .L.str.11                                0x080038be   Data           2  esp.o(.rodata.str1.1)
-    .L.str.12                                0x080038c0   Data           8  esp.o(.rodata.str1.1)
-    .L.str.13                                0x080038c8   Data          12  esp.o(.rodata.str1.1)
-    locale$$data                             0x080038f4   Section       28  lc_numeric_c.o(locale$$data)
-    __lcnum_c_name                           0x080038f8   Data           2  lc_numeric_c.o(locale$$data)
-    __lcnum_c_start                          0x08003900   Data           0  lc_numeric_c.o(locale$$data)
-    __lcnum_c_point                          0x0800390c   Data           0  lc_numeric_c.o(locale$$data)
-    __lcnum_c_thousands                      0x0800390e   Data           0  lc_numeric_c.o(locale$$data)
-    __lcnum_c_grouping                       0x0800390f   Data           0  lc_numeric_c.o(locale$$data)
-    __lcnum_c_end                            0x08003910   Data           0  lc_numeric_c.o(locale$$data)
-    locale$$data                             0x08003910   Section      272  lc_ctype_c.o(locale$$data)
-    __lcctype_c_name                         0x08003914   Data           2  lc_ctype_c.o(locale$$data)
-    __lcctype_c_start                        0x0800391c   Data           0  lc_ctype_c.o(locale$$data)
-    __lcctype_c_end                          0x08003a20   Data           0  lc_ctype_c.o(locale$$data)
+    [Anonymous Symbol]                       0x08001584   Section        0  esp.o(.text.ESP_CloseTCP)
+    [Anonymous Symbol]                       0x080015a0   Section        0  esp.o(.text.ESP_ConnectWiFi)
+    [Anonymous Symbol]                       0x080015e4   Section        0  esp.o(.text.ESP_Init)
+    [Anonymous Symbol]                       0x08001640   Section        0  esp.o(.text.ESP_OpenTCP)
+    ESP_SendAT                               0x08001685   Thumb Code    54  esp.o(.text.ESP_SendAT)
+    [Anonymous Symbol]                       0x08001684   Section        0  esp.o(.text.ESP_SendAT)
+    [Anonymous Symbol]                       0x080016bc   Section        0  esp.o(.text.ESP_SendData)
+    ESP_UART_ReadResponse                    0x08001735   Thumb Code   136  esp.o(.text.ESP_UART_ReadResponse)
+    [Anonymous Symbol]                       0x08001734   Section        0  esp.o(.text.ESP_UART_ReadResponse)
+    ESP_UART_SendString                      0x080017bd   Thumb Code    24  esp.o(.text.ESP_UART_SendString)
+    [Anonymous Symbol]                       0x080017bc   Section        0  esp.o(.text.ESP_UART_SendString)
+    [Anonymous Symbol]                       0x080017d4   Section        0  esp.o(.text.ESP_WiFiStatus)
+    GPIO_clock_enable                        0x08001811   Thumb Code   292  gpio_driver.o(.text.GPIO_clock_enable)
+    [Anonymous Symbol]                       0x08001810   Section        0  gpio_driver.o(.text.GPIO_clock_enable)
+    [Anonymous Symbol]                       0x08001934   Section        0  gpio_driver.o(.text.GPIO_init)
+    [Anonymous Symbol]                       0x080019e0   Section        0  i2c_driver.o(.text.I2C_init)
+    [Anonymous Symbol]                       0x08001b34   Section        0  i2c_driver.o(.text.I2C_read_nack)
+    [Anonymous Symbol]                       0x08001b64   Section        0  i2c_driver.o(.text.I2C_start)
+    [Anonymous Symbol]                       0x08001c20   Section        0  i2c_driver.o(.text.I2C_stop)
+    [Anonymous Symbol]                       0x08001c34   Section        0  i2c_driver.o(.text.I2C_write)
+    [Anonymous Symbol]                       0x08001c68   Section        0  ssd1306.o(.text.SSD1306_clear)
+    [Anonymous Symbol]                       0x08001c7c   Section        0  ssd1306.o(.text.SSD1306_draw_char)
+    [Anonymous Symbol]                       0x08001d34   Section        0  ssd1306.o(.text.SSD1306_draw_pixel)
+    [Anonymous Symbol]                       0x08001dbc   Section        0  ssd1306.o(.text.SSD1306_draw_string)
+    [Anonymous Symbol]                       0x08001df8   Section        0  ssd1306.o(.text.SSD1306_init)
+    [Anonymous Symbol]                       0x08001ef0   Section        0  ssd1306.o(.text.SSD1306_update)
+    [Anonymous Symbol]                       0x08001f50   Section        0  ssd1306.o(.text.SSD1306_write_command)
+    [Anonymous Symbol]                       0x08001f84   Section        0  ssd1306.o(.text.SSD1306_write_data)
+    [Anonymous Symbol]                       0x08001fe0   Section        0  system_stm32f4xx.o(.text.SystemInit)
+    [Anonymous Symbol]                       0x08001ff4   Section        0  tim_driver.o(.text.TIM_PWM_init)
+    [Anonymous Symbol]                       0x0800210c   Section        0  tim_driver.o(.text.TIM_PWM_set_duty)
+    [Anonymous Symbol]                       0x08002168   Section        0  tsl2591.o(.text.TSL2591_calculate_lux)
+    [Anonymous Symbol]                       0x0800227c   Section        0  tsl2591.o(.text.TSL2591_init)
+    [Anonymous Symbol]                       0x0800229c   Section        0  tsl2591.o(.text.TSL2591_read)
+    [Anonymous Symbol]                       0x080022ec   Section        0  tsl2591.o(.text.TSL2591_read_ch0)
+    [Anonymous Symbol]                       0x0800231c   Section        0  tsl2591.o(.text.TSL2591_read_ch1)
+    [Anonymous Symbol]                       0x0800234c   Section        0  tsl2591.o(.text.TSL2591_write)
+    [Anonymous Symbol]                       0x08002390   Section        0  usart_driver.o(.text.USART_ReceiveChar)
+    [Anonymous Symbol]                       0x080023b0   Section        0  usart_driver.o(.text.USART_SendChar)
+    [Anonymous Symbol]                       0x080023d4   Section        0  usart_driver.o(.text.USART_SendString)
+    [Anonymous Symbol]                       0x080023fc   Section        0  usart_driver.o(.text.USART_init)
+    enable_tim_clock                         0x08002549   Thumb Code   502  tim_driver.o(.text.enable_tim_clock)
+    [Anonymous Symbol]                       0x08002548   Section        0  tim_driver.o(.text.enable_tim_clock)
+    gpio_config_alt_func                     0x08002741   Thumb Code    90  gpio_driver.o(.text.gpio_config_alt_func)
+    [Anonymous Symbol]                       0x08002740   Section        0  gpio_driver.o(.text.gpio_config_alt_func)
+    gpio_config_mode                         0x0800279d   Thumb Code    54  gpio_driver.o(.text.gpio_config_mode)
+    [Anonymous Symbol]                       0x0800279c   Section        0  gpio_driver.o(.text.gpio_config_mode)
+    gpio_config_otype                        0x080027d5   Thumb Code    50  gpio_driver.o(.text.gpio_config_otype)
+    [Anonymous Symbol]                       0x080027d4   Section        0  gpio_driver.o(.text.gpio_config_otype)
+    gpio_config_pupd                         0x08002809   Thumb Code    54  gpio_driver.o(.text.gpio_config_pupd)
+    [Anonymous Symbol]                       0x08002808   Section        0  gpio_driver.o(.text.gpio_config_pupd)
+    gpio_config_speed                        0x08002841   Thumb Code    54  gpio_driver.o(.text.gpio_config_speed)
+    [Anonymous Symbol]                       0x08002840   Section        0  gpio_driver.o(.text.gpio_config_speed)
+    [Anonymous Symbol]                       0x08002878   Section        0  main.o(.text.main)
+    [Anonymous Symbol]                       0x08002c84   Section        0  main.o(.text.scale_lux_to_pwm)
+    CL$$btod_d2e                             0x08002cf2   Section       62  btod.o(CL$$btod_d2e)
+    CL$$btod_d2e_denorm_low                  0x08002d30   Section       70  btod.o(CL$$btod_d2e_denorm_low)
+    CL$$btod_d2e_norm_op1                    0x08002d76   Section       96  btod.o(CL$$btod_d2e_norm_op1)
+    CL$$btod_div_common                      0x08002dd8   Section      824  btod.o(CL$$btod_div_common)
+    CL$$btod_e2e                             0x08003110   Section      220  btod.o(CL$$btod_e2e)
+    CL$$btod_ediv                            0x080031ec   Section       42  btod.o(CL$$btod_ediv)
+    CL$$btod_emul                            0x08003216   Section       42  btod.o(CL$$btod_emul)
+    CL$$btod_mult_common                     0x08003240   Section      580  btod.o(CL$$btod_mult_common)
+    i.__ARM_fpclassify                       0x08003484   Section        0  fpclassify.o(i.__ARM_fpclassify)
+    i._is_digit                              0x080034b4   Section        0  __printf_wp.o(i._is_digit)
+    locale$$code                             0x080034c4   Section       44  lc_numeric_c.o(locale$$code)
+    locale$$code                             0x080034f0   Section       44  lc_ctype_c.o(locale$$code)
+    $v0                                      0x0800351c   Number         0  fpinit.o(x$fpl$fpinit)
+    x$fpl$fpinit                             0x0800351c   Section       26  fpinit.o(x$fpl$fpinit)
+    $v0                                      0x08003536   Number         0  printf1.o(x$fpl$printf1)
+    x$fpl$printf1                            0x08003536   Section        4  printf1.o(x$fpl$printf1)
+    $v0                                      0x0800353a   Number         0  printf2.o(x$fpl$printf2)
+    x$fpl$printf2                            0x0800353a   Section        4  printf2.o(x$fpl$printf2)
+    x$fpl$usenofp                            0x0800353e   Section        0  usenofp.o(x$fpl$usenofp)
+    initial_mbstate                          0x08003540   Data           8  _printf_wctomb.o(.constdata)
+    .constdata                               0x08003540   Section        8  _printf_wctomb.o(.constdata)
+    uc_hextab                                0x08003548   Data          20  _printf_hex_int_ll_ptr.o(.constdata)
+    .constdata                               0x08003548   Section       40  _printf_hex_int_ll_ptr.o(.constdata)
+    lc_hextab                                0x0800355c   Data          20  _printf_hex_int_ll_ptr.o(.constdata)
+    maptable                                 0x08003570   Data          17  __printf_flags_ss_wp.o(.constdata)
+    .constdata                               0x08003570   Section       17  __printf_flags_ss_wp.o(.constdata)
+    lc_hextab                                0x08003581   Data          19  _printf_fp_hex.o(.constdata)
+    .constdata                               0x08003581   Section       38  _printf_fp_hex.o(.constdata)
+    uc_hextab                                0x08003594   Data          19  _printf_fp_hex.o(.constdata)
+    tenpwrs_x                                0x080035a8   Data          60  bigflt0.o(.constdata)
+    .constdata                               0x080035a8   Section      148  bigflt0.o(.constdata)
+    tenpwrs_i                                0x080035e4   Data          64  bigflt0.o(.constdata)
+    .L.str.8                                 0x08003934   Data          13  main.o(.rodata.str1.1)
+    [Anonymous Symbol]                       0x08003934   Section        0  main.o(.rodata.str1.1)
+    .L.str.2                                 0x08003941   Data           8  main.o(.rodata.str1.1)
+    .L.str.4                                 0x08003949   Data           9  main.o(.rodata.str1.1)
+    .L.str.3                                 0x08003952   Data          10  main.o(.rodata.str1.1)
+    .L.str.5                                 0x0800395c   Data          11  main.o(.rodata.str1.1)
+    .L.str                                   0x08003967   Data          14  main.o(.rodata.str1.1)
+    .L.str.7                                 0x08003975   Data         101  main.o(.rodata.str1.1)
+    .L.str.1                                 0x080039da   Data           8  main.o(.rodata.str1.1)
+    .L.str.6                                 0x080039e2   Data          13  main.o(.rodata.str1.1)
+    .L.str.14                                0x080039ef   Data           3  esp.o(.rodata.str1.1)
+    [Anonymous Symbol]                       0x080039ef   Section        0  esp.o(.rodata.str1.1)
+    .L.str.3                                 0x080039f2   Data          19  esp.o(.rodata.str1.1)
+    .L.str.2                                 0x08003a05   Data          12  esp.o(.rodata.str1.1)
+    .L.str.5                                 0x08003a11   Data          13  esp.o(.rodata.str1.1)
+    .L.str.4                                 0x08003a1e   Data           8  esp.o(.rodata.str1.1)
+    .L.str.11                                0x08003a26   Data           2  esp.o(.rodata.str1.1)
+    .L.str.7                                 0x08003a28   Data          10  esp.o(.rodata.str1.1)
+    .L.str.13                                0x08003a32   Data          12  esp.o(.rodata.str1.1)
+    .L.str.12                                0x08003a3e   Data           8  esp.o(.rodata.str1.1)
+    .L.str.1                                 0x08003a43   Data           3  esp.o(.rodata.str1.1)
+    .L.str.8                                 0x08003a46   Data           6  esp.o(.rodata.str1.1)
+    .L.str.6                                 0x08003a4c   Data          12  esp.o(.rodata.str1.1)
+    .L.str                                   0x08003a58   Data           3  esp.o(.rodata.str1.1)
+    .L.str.9                                 0x08003a5b   Data          26  esp.o(.rodata.str1.1)
+    .L.str.10                                0x08003a75   Data          14  esp.o(.rodata.str1.1)
+    locale$$data                             0x08003aa4   Section       28  lc_numeric_c.o(locale$$data)
+    __lcnum_c_name                           0x08003aa8   Data           2  lc_numeric_c.o(locale$$data)
+    __lcnum_c_start                          0x08003ab0   Data           0  lc_numeric_c.o(locale$$data)
+    __lcnum_c_point                          0x08003abc   Data           0  lc_numeric_c.o(locale$$data)
+    __lcnum_c_thousands                      0x08003abe   Data           0  lc_numeric_c.o(locale$$data)
+    __lcnum_c_grouping                       0x08003abf   Data           0  lc_numeric_c.o(locale$$data)
+    __lcnum_c_end                            0x08003ac0   Data           0  lc_numeric_c.o(locale$$data)
+    locale$$data                             0x08003ac0   Section      272  lc_ctype_c.o(locale$$data)
+    __lcctype_c_name                         0x08003ac4   Data           2  lc_ctype_c.o(locale$$data)
+    __lcctype_c_start                        0x08003acc   Data           0  lc_ctype_c.o(locale$$data)
+    __lcctype_c_end                          0x08003bd0   Data           0  lc_ctype_c.o(locale$$data)
     .bss                                     0x20000010   Section       96  libspace.o(.bss)
     buffer                                   0x20000074   Data        1024  ssd1306.o(.bss.buffer)
     [Anonymous Symbol]                       0x20000074   Section        0  ssd1306.o(.bss.buffer)
@@ -1288,60 +1295,63 @@ Image Symbol Table
     __I$use$semihosting                      0x08001581   Thumb Code     0  use_no_semi.o(.text)
     __use_no_semihosting_swi                 0x08001581   Thumb Code     2  use_no_semi.o(.text)
     __semihosting_library_function           0x08001583   Thumb Code     0  indicate_semi.o(.text)
-    ESP_ConnectWiFi                          0x08001585   Thumb Code    68  esp.o(.text.ESP_ConnectWiFi)
-    ESP_Init                                 0x080015c9   Thumb Code    92  esp.o(.text.ESP_Init)
-    ESP_WiFiStatus                           0x080016fd   Thumb Code    60  esp.o(.text.ESP_WiFiStatus)
-    GPIO_init                                0x0800185d   Thumb Code   170  gpio_driver.o(.text.GPIO_init)
-    I2C_init                                 0x08001909   Thumb Code   340  i2c_driver.o(.text.I2C_init)
-    I2C_read_nack                            0x08001a5d   Thumb Code    48  i2c_driver.o(.text.I2C_read_nack)
-    I2C_start                                0x08001a8d   Thumb Code   188  i2c_driver.o(.text.I2C_start)
-    I2C_stop                                 0x08001b49   Thumb Code    18  i2c_driver.o(.text.I2C_stop)
-    I2C_write                                0x08001b5d   Thumb Code    52  i2c_driver.o(.text.I2C_write)
-    SSD1306_clear                            0x08001b91   Thumb Code    20  ssd1306.o(.text.SSD1306_clear)
-    SSD1306_draw_char                        0x08001ba5   Thumb Code   182  ssd1306.o(.text.SSD1306_draw_char)
-    SSD1306_draw_pixel                       0x08001c5d   Thumb Code   136  ssd1306.o(.text.SSD1306_draw_pixel)
-    SSD1306_draw_string                      0x08001ce5   Thumb Code    60  ssd1306.o(.text.SSD1306_draw_string)
-    SSD1306_init                             0x08001d21   Thumb Code   248  ssd1306.o(.text.SSD1306_init)
-    SSD1306_update                           0x08001e19   Thumb Code    96  ssd1306.o(.text.SSD1306_update)
-    SSD1306_write_command                    0x08001e79   Thumb Code    50  ssd1306.o(.text.SSD1306_write_command)
-    SSD1306_write_data                       0x08001ead   Thumb Code    92  ssd1306.o(.text.SSD1306_write_data)
-    SystemInit                               0x08001f09   Thumb Code    18  system_stm32f4xx.o(.text.SystemInit)
-    TIM_PWM_init                             0x08001f1d   Thumb Code   280  tim_driver.o(.text.TIM_PWM_init)
-    TIM_PWM_set_duty                         0x08002035   Thumb Code    92  tim_driver.o(.text.TIM_PWM_set_duty)
-    TSL2591_calculate_lux                    0x08002091   Thumb Code   256  tsl2591.o(.text.TSL2591_calculate_lux)
-    TSL2591_init                             0x080021a5   Thumb Code    30  tsl2591.o(.text.TSL2591_init)
-    TSL2591_read                             0x080021c5   Thumb Code    78  tsl2591.o(.text.TSL2591_read)
-    TSL2591_read_ch0                         0x08002215   Thumb Code    46  tsl2591.o(.text.TSL2591_read_ch0)
-    TSL2591_read_ch1                         0x08002245   Thumb Code    46  tsl2591.o(.text.TSL2591_read_ch1)
-    TSL2591_write                            0x08002275   Thumb Code    66  tsl2591.o(.text.TSL2591_write)
-    USART_ReceiveChar                        0x080022b9   Thumb Code    30  usart_driver.o(.text.USART_ReceiveChar)
-    USART_SendChar                           0x080022d9   Thumb Code    36  usart_driver.o(.text.USART_SendChar)
-    USART_SendString                         0x080022fd   Thumb Code    38  usart_driver.o(.text.USART_SendString)
-    USART_init                               0x08002325   Thumb Code   332  usart_driver.o(.text.USART_init)
-    main                                     0x080027a1   Thumb Code   948  main.o(.text.main)
-    scale_lux_to_pwm                         0x08002b55   Thumb Code   110  main.o(.text.scale_lux_to_pwm)
-    _btod_d2e                                0x08002bc3   Thumb Code    62  btod.o(CL$$btod_d2e)
-    _d2e_denorm_low                          0x08002c01   Thumb Code    70  btod.o(CL$$btod_d2e_denorm_low)
-    _d2e_norm_op1                            0x08002c47   Thumb Code    96  btod.o(CL$$btod_d2e_norm_op1)
-    __btod_div_common                        0x08002ca9   Thumb Code   696  btod.o(CL$$btod_div_common)
-    _e2e                                     0x08002fe1   Thumb Code   220  btod.o(CL$$btod_e2e)
-    _btod_ediv                               0x080030bd   Thumb Code    42  btod.o(CL$$btod_ediv)
-    _btod_emul                               0x080030e7   Thumb Code    42  btod.o(CL$$btod_emul)
-    __btod_mult_common                       0x08003111   Thumb Code   580  btod.o(CL$$btod_mult_common)
-    __ARM_fpclassify                         0x08003355   Thumb Code    48  fpclassify.o(i.__ARM_fpclassify)
-    _is_digit                                0x08003385   Thumb Code    14  __printf_wp.o(i._is_digit)
-    _get_lc_numeric                          0x08003395   Thumb Code    44  lc_numeric_c.o(locale$$code)
-    _get_lc_ctype                            0x080033c1   Thumb Code    44  lc_ctype_c.o(locale$$code)
-    _fp_init                                 0x080033ed   Thumb Code    26  fpinit.o(x$fpl$fpinit)
-    __fplib_config_fpu_vfp                   0x08003405   Thumb Code     0  fpinit.o(x$fpl$fpinit)
-    __fplib_config_pureend_doubles           0x08003405   Thumb Code     0  fpinit.o(x$fpl$fpinit)
-    _printf_fp_dec                           0x08003407   Thumb Code     4  printf1.o(x$fpl$printf1)
-    _printf_fp_hex                           0x0800340b   Thumb Code     4  printf2.o(x$fpl$printf2)
-    __I$use$fp                               0x0800340e   Number         0  usenofp.o(x$fpl$usenofp)
-    font8x8                                  0x0800350c   Data         760  font.o(.rodata.font8x8)
-    Region$$Table$$Base                      0x080038d4   Number         0  anon$$obj.o(Region$$Table)
-    Region$$Table$$Limit                     0x080038f4   Number         0  anon$$obj.o(Region$$Table)
-    __ctype                                  0x0800391d   Data           0  lc_ctype_c.o(locale$$data)
+    ESP_CloseTCP                             0x08001585   Thumb Code    28  esp.o(.text.ESP_CloseTCP)
+    ESP_ConnectWiFi                          0x080015a1   Thumb Code    68  esp.o(.text.ESP_ConnectWiFi)
+    ESP_Init                                 0x080015e5   Thumb Code    92  esp.o(.text.ESP_Init)
+    ESP_OpenTCP                              0x08001641   Thumb Code    66  esp.o(.text.ESP_OpenTCP)
+    ESP_SendData                             0x080016bd   Thumb Code   118  esp.o(.text.ESP_SendData)
+    ESP_WiFiStatus                           0x080017d5   Thumb Code    60  esp.o(.text.ESP_WiFiStatus)
+    GPIO_init                                0x08001935   Thumb Code   170  gpio_driver.o(.text.GPIO_init)
+    I2C_init                                 0x080019e1   Thumb Code   340  i2c_driver.o(.text.I2C_init)
+    I2C_read_nack                            0x08001b35   Thumb Code    48  i2c_driver.o(.text.I2C_read_nack)
+    I2C_start                                0x08001b65   Thumb Code   188  i2c_driver.o(.text.I2C_start)
+    I2C_stop                                 0x08001c21   Thumb Code    18  i2c_driver.o(.text.I2C_stop)
+    I2C_write                                0x08001c35   Thumb Code    52  i2c_driver.o(.text.I2C_write)
+    SSD1306_clear                            0x08001c69   Thumb Code    20  ssd1306.o(.text.SSD1306_clear)
+    SSD1306_draw_char                        0x08001c7d   Thumb Code   182  ssd1306.o(.text.SSD1306_draw_char)
+    SSD1306_draw_pixel                       0x08001d35   Thumb Code   136  ssd1306.o(.text.SSD1306_draw_pixel)
+    SSD1306_draw_string                      0x08001dbd   Thumb Code    60  ssd1306.o(.text.SSD1306_draw_string)
+    SSD1306_init                             0x08001df9   Thumb Code   248  ssd1306.o(.text.SSD1306_init)
+    SSD1306_update                           0x08001ef1   Thumb Code    96  ssd1306.o(.text.SSD1306_update)
+    SSD1306_write_command                    0x08001f51   Thumb Code    50  ssd1306.o(.text.SSD1306_write_command)
+    SSD1306_write_data                       0x08001f85   Thumb Code    92  ssd1306.o(.text.SSD1306_write_data)
+    SystemInit                               0x08001fe1   Thumb Code    18  system_stm32f4xx.o(.text.SystemInit)
+    TIM_PWM_init                             0x08001ff5   Thumb Code   280  tim_driver.o(.text.TIM_PWM_init)
+    TIM_PWM_set_duty                         0x0800210d   Thumb Code    92  tim_driver.o(.text.TIM_PWM_set_duty)
+    TSL2591_calculate_lux                    0x08002169   Thumb Code   256  tsl2591.o(.text.TSL2591_calculate_lux)
+    TSL2591_init                             0x0800227d   Thumb Code    30  tsl2591.o(.text.TSL2591_init)
+    TSL2591_read                             0x0800229d   Thumb Code    78  tsl2591.o(.text.TSL2591_read)
+    TSL2591_read_ch0                         0x080022ed   Thumb Code    46  tsl2591.o(.text.TSL2591_read_ch0)
+    TSL2591_read_ch1                         0x0800231d   Thumb Code    46  tsl2591.o(.text.TSL2591_read_ch1)
+    TSL2591_write                            0x0800234d   Thumb Code    66  tsl2591.o(.text.TSL2591_write)
+    USART_ReceiveChar                        0x08002391   Thumb Code    30  usart_driver.o(.text.USART_ReceiveChar)
+    USART_SendChar                           0x080023b1   Thumb Code    36  usart_driver.o(.text.USART_SendChar)
+    USART_SendString                         0x080023d5   Thumb Code    38  usart_driver.o(.text.USART_SendString)
+    USART_init                               0x080023fd   Thumb Code   332  usart_driver.o(.text.USART_init)
+    main                                     0x08002879   Thumb Code  1034  main.o(.text.main)
+    scale_lux_to_pwm                         0x08002c85   Thumb Code   110  main.o(.text.scale_lux_to_pwm)
+    _btod_d2e                                0x08002cf3   Thumb Code    62  btod.o(CL$$btod_d2e)
+    _d2e_denorm_low                          0x08002d31   Thumb Code    70  btod.o(CL$$btod_d2e_denorm_low)
+    _d2e_norm_op1                            0x08002d77   Thumb Code    96  btod.o(CL$$btod_d2e_norm_op1)
+    __btod_div_common                        0x08002dd9   Thumb Code   696  btod.o(CL$$btod_div_common)
+    _e2e                                     0x08003111   Thumb Code   220  btod.o(CL$$btod_e2e)
+    _btod_ediv                               0x080031ed   Thumb Code    42  btod.o(CL$$btod_ediv)
+    _btod_emul                               0x08003217   Thumb Code    42  btod.o(CL$$btod_emul)
+    __btod_mult_common                       0x08003241   Thumb Code   580  btod.o(CL$$btod_mult_common)
+    __ARM_fpclassify                         0x08003485   Thumb Code    48  fpclassify.o(i.__ARM_fpclassify)
+    _is_digit                                0x080034b5   Thumb Code    14  __printf_wp.o(i._is_digit)
+    _get_lc_numeric                          0x080034c5   Thumb Code    44  lc_numeric_c.o(locale$$code)
+    _get_lc_ctype                            0x080034f1   Thumb Code    44  lc_ctype_c.o(locale$$code)
+    _fp_init                                 0x0800351d   Thumb Code    26  fpinit.o(x$fpl$fpinit)
+    __fplib_config_fpu_vfp                   0x08003535   Thumb Code     0  fpinit.o(x$fpl$fpinit)
+    __fplib_config_pureend_doubles           0x08003535   Thumb Code     0  fpinit.o(x$fpl$fpinit)
+    _printf_fp_dec                           0x08003537   Thumb Code     4  printf1.o(x$fpl$printf1)
+    _printf_fp_hex                           0x0800353b   Thumb Code     4  printf2.o(x$fpl$printf2)
+    __I$use$fp                               0x0800353e   Number         0  usenofp.o(x$fpl$usenofp)
+    font8x8                                  0x0800363c   Data         760  font.o(.rodata.font8x8)
+    Region$$Table$$Base                      0x08003a84   Number         0  anon$$obj.o(Region$$Table)
+    Region$$Table$$Limit                     0x08003aa4   Number         0  anon$$obj.o(Region$$Table)
+    __ctype                                  0x08003acd   Data           0  lc_ctype_c.o(locale$$data)
     ESP_RX_PIN                               0x20000000   Data           1  main.o(.data.ESP_RX_PIN)
     ESP_TX_PIN                               0x20000001   Data           1  main.o(.data.ESP_TX_PIN)
     I2C_SCL_PIN_LIGHT                        0x20000002   Data           1  main.o(.data.I2C_SCL_PIN_LIGHT)
@@ -1363,9 +1373,9 @@ Memory Map of the image
 
   Image Entry point : 0x0800033d
 
-  Load Region LR_1 (Base: 0x08000000, Size: 0x00003a2c, Max: 0xffffffff, ABSOLUTE)
+  Load Region LR_1 (Base: 0x08000000, Size: 0x00003bdc, Max: 0xffffffff, ABSOLUTE)
 
-    Execution Region ER_RO (Exec base: 0x08000000, Load base: 0x08000000, Size: 0x00003a20, Max: 0xffffffff, ABSOLUTE)
+    Execution Region ER_RO (Exec base: 0x08000000, Load base: 0x08000000, Size: 0x00003bd0, Max: 0xffffffff, ABSOLUTE)
 
     Exec Addr    Load Addr    Size         Type   Attr      Idx    E Section Name        Object
 
@@ -1492,116 +1502,123 @@ Memory Map of the image
     0x08001580   0x08001580   0x00000002   Code   RO          512    .text               c_w.l(use_no_semi.o)
     0x08001582   0x08001582   0x00000000   Code   RO          514    .text               c_w.l(indicate_semi.o)
     0x08001582   0x08001582   0x00000002   PAD
-    0x08001584   0x08001584   0x00000044   Code   RO          173    .text.ESP_ConnectWiFi  esp.o
-    0x080015c8   0x080015c8   0x0000005c   Code   RO          169    .text.ESP_Init      esp.o
-    0x08001624   0x08001624   0x00000036   Code   RO          171    .text.ESP_SendAT    esp.o
-    0x0800165a   0x0800165a   0x00000002   PAD
-    0x0800165c   0x0800165c   0x00000088   Code   RO          183    .text.ESP_UART_ReadResponse  esp.o
-    0x080016e4   0x080016e4   0x00000018   Code   RO          181    .text.ESP_UART_SendString  esp.o
-    0x080016fc   0x080016fc   0x0000003c   Code   RO          175    .text.ESP_WiFiStatus  esp.o
-    0x08001738   0x08001738   0x00000124   Code   RO           34    .text.GPIO_clock_enable  gpio_driver.o
-    0x0800185c   0x0800185c   0x000000aa   Code   RO           32    .text.GPIO_init     gpio_driver.o
-    0x08001906   0x08001906   0x00000002   PAD
-    0x08001908   0x08001908   0x00000154   Code   RO           68    .text.I2C_init      i2c_driver.o
-    0x08001a5c   0x08001a5c   0x00000030   Code   RO           76    .text.I2C_read_nack  i2c_driver.o
-    0x08001a8c   0x08001a8c   0x000000bc   Code   RO           70    .text.I2C_start     i2c_driver.o
-    0x08001b48   0x08001b48   0x00000012   Code   RO           78    .text.I2C_stop      i2c_driver.o
-    0x08001b5a   0x08001b5a   0x00000002   PAD
-    0x08001b5c   0x08001b5c   0x00000034   Code   RO           72    .text.I2C_write     i2c_driver.o
-    0x08001b90   0x08001b90   0x00000014   Code   RO          144    .text.SSD1306_clear  ssd1306.o
-    0x08001ba4   0x08001ba4   0x000000b6   Code   RO          150    .text.SSD1306_draw_char  ssd1306.o
-    0x08001c5a   0x08001c5a   0x00000002   PAD
-    0x08001c5c   0x08001c5c   0x00000088   Code   RO          148    .text.SSD1306_draw_pixel  ssd1306.o
-    0x08001ce4   0x08001ce4   0x0000003c   Code   RO          152    .text.SSD1306_draw_string  ssd1306.o
-    0x08001d20   0x08001d20   0x000000f8   Code   RO          142    .text.SSD1306_init  ssd1306.o
-    0x08001e18   0x08001e18   0x00000060   Code   RO          146    .text.SSD1306_update  ssd1306.o
-    0x08001e78   0x08001e78   0x00000032   Code   RO          138    .text.SSD1306_write_command  ssd1306.o
-    0x08001eaa   0x08001eaa   0x00000002   PAD
-    0x08001eac   0x08001eac   0x0000005c   Code   RO          140    .text.SSD1306_write_data  ssd1306.o
-    0x08001f08   0x08001f08   0x00000012   Code   RO          205    .text.SystemInit    system_stm32f4xx.o
-    0x08001f1a   0x08001f1a   0x00000002   PAD
-    0x08001f1c   0x08001f1c   0x00000118   Code   RO           87    .text.TIM_PWM_init  tim_driver.o
-    0x08002034   0x08002034   0x0000005c   Code   RO           91    .text.TIM_PWM_set_duty  tim_driver.o
-    0x08002090   0x08002090   0x00000114   Code   RO          127    .text.TSL2591_calculate_lux  tsl2591.o
-    0x080021a4   0x080021a4   0x0000001e   Code   RO          121    .text.TSL2591_init  tsl2591.o
-    0x080021c2   0x080021c2   0x00000002   PAD
-    0x080021c4   0x080021c4   0x0000004e   Code   RO          119    .text.TSL2591_read  tsl2591.o
-    0x08002212   0x08002212   0x00000002   PAD
-    0x08002214   0x08002214   0x0000002e   Code   RO          123    .text.TSL2591_read_ch0  tsl2591.o
-    0x08002242   0x08002242   0x00000002   PAD
-    0x08002244   0x08002244   0x0000002e   Code   RO          125    .text.TSL2591_read_ch1  tsl2591.o
-    0x08002272   0x08002272   0x00000002   PAD
-    0x08002274   0x08002274   0x00000042   Code   RO          117    .text.TSL2591_write  tsl2591.o
-    0x080022b6   0x080022b6   0x00000002   PAD
-    0x080022b8   0x080022b8   0x0000001e   Code   RO          106    .text.USART_ReceiveChar  usart_driver.o
-    0x080022d6   0x080022d6   0x00000002   PAD
-    0x080022d8   0x080022d8   0x00000024   Code   RO          102    .text.USART_SendChar  usart_driver.o
-    0x080022fc   0x080022fc   0x00000026   Code   RO          104    .text.USART_SendString  usart_driver.o
-    0x08002322   0x08002322   0x00000002   PAD
-    0x08002324   0x08002324   0x0000014c   Code   RO          100    .text.USART_init    usart_driver.o
-    0x08002470   0x08002470   0x000001f6   Code   RO           89    .text.enable_tim_clock  tim_driver.o
-    0x08002666   0x08002666   0x00000002   PAD
-    0x08002668   0x08002668   0x0000005a   Code   RO           44    .text.gpio_config_alt_func  gpio_driver.o
-    0x080026c2   0x080026c2   0x00000002   PAD
-    0x080026c4   0x080026c4   0x00000036   Code   RO           36    .text.gpio_config_mode  gpio_driver.o
-    0x080026fa   0x080026fa   0x00000002   PAD
-    0x080026fc   0x080026fc   0x00000032   Code   RO           38    .text.gpio_config_otype  gpio_driver.o
-    0x0800272e   0x0800272e   0x00000002   PAD
-    0x08002730   0x08002730   0x00000036   Code   RO           42    .text.gpio_config_pupd  gpio_driver.o
-    0x08002766   0x08002766   0x00000002   PAD
-    0x08002768   0x08002768   0x00000036   Code   RO           40    .text.gpio_config_speed  gpio_driver.o
-    0x0800279e   0x0800279e   0x00000002   PAD
-    0x080027a0   0x080027a0   0x000003b4   Code   RO            4    .text.main          main.o
-    0x08002b54   0x08002b54   0x0000006e   Code   RO            2    .text.scale_lux_to_pwm  main.o
-    0x08002bc2   0x08002bc2   0x0000003e   Code   RO          385    CL$$btod_d2e        c_w.l(btod.o)
-    0x08002c00   0x08002c00   0x00000046   Code   RO          387    CL$$btod_d2e_denorm_low  c_w.l(btod.o)
-    0x08002c46   0x08002c46   0x00000060   Code   RO          386    CL$$btod_d2e_norm_op1  c_w.l(btod.o)
-    0x08002ca6   0x08002ca6   0x00000002   PAD
-    0x08002ca8   0x08002ca8   0x00000338   Code   RO          395    CL$$btod_div_common  c_w.l(btod.o)
-    0x08002fe0   0x08002fe0   0x000000dc   Code   RO          392    CL$$btod_e2e        c_w.l(btod.o)
-    0x080030bc   0x080030bc   0x0000002a   Code   RO          389    CL$$btod_ediv       c_w.l(btod.o)
-    0x080030e6   0x080030e6   0x0000002a   Code   RO          388    CL$$btod_emul       c_w.l(btod.o)
-    0x08003110   0x08003110   0x00000244   Code   RO          394    CL$$btod_mult_common  c_w.l(btod.o)
-    0x08003354   0x08003354   0x00000030   Code   RO          423    i.__ARM_fpclassify  m_wm.l(fpclassify.o)
-    0x08003384   0x08003384   0x0000000e   Code   RO          293    i._is_digit         c_w.l(__printf_wp.o)
-    0x08003392   0x08003392   0x00000002   PAD
-    0x08003394   0x08003394   0x0000002c   Code   RO          410    locale$$code        c_w.l(lc_numeric_c.o)
-    0x080033c0   0x080033c0   0x0000002c   Code   RO          433    locale$$code        c_w.l(lc_ctype_c.o)
-    0x080033ec   0x080033ec   0x0000001a   Code   RO          495    x$fpl$fpinit        fz_wm.l(fpinit.o)
-    0x08003406   0x08003406   0x00000004   Code   RO          328    x$fpl$printf1       fz_wm.l(printf1.o)
-    0x0800340a   0x0800340a   0x00000004   Code   RO          330    x$fpl$printf2       fz_wm.l(printf2.o)
-    0x0800340e   0x0800340e   0x00000000   Code   RO          422    x$fpl$usenofp       fz_wm.l(usenofp.o)
-    0x0800340e   0x0800340e   0x00000002   PAD
-    0x08003410   0x08003410   0x00000008   Data   RO          252    .constdata          c_w.l(_printf_wctomb.o)
-    0x08003418   0x08003418   0x00000028   Data   RO          281    .constdata          c_w.l(_printf_hex_int_ll_ptr.o)
-    0x08003440   0x08003440   0x00000011   Data   RO          301    .constdata          c_w.l(__printf_flags_ss_wp.o)
-    0x08003451   0x08003451   0x00000026   Data   RO          360    .constdata          c_w.l(_printf_fp_hex.o)
-    0x08003477   0x08003477   0x00000001   PAD
-    0x08003478   0x08003478   0x00000094   Data   RO          383    .constdata          c_w.l(bigflt0.o)
-    0x0800350c   0x0800350c   0x000002f8   Data   RO          163    .rodata.font8x8     font.o
-    0x08003804   0x08003804   0x0000003c   Data   RO           17    .rodata.str1.1      main.o
-    0x08003840   0x08003840   0x00000094   Data   RO          187    .rodata.str1.1      esp.o
-    0x080038d4   0x080038d4   0x00000020   Data   RO          570    Region$$Table       anon$$obj.o
-    0x080038f4   0x080038f4   0x0000001c   Data   RO          409    locale$$data        c_w.l(lc_numeric_c.o)
-    0x08003910   0x08003910   0x00000110   Data   RO          432    locale$$data        c_w.l(lc_ctype_c.o)
+    0x08001584   0x08001584   0x0000001c   Code   RO          185    .text.ESP_CloseTCP  esp.o
+    0x080015a0   0x080015a0   0x00000044   Code   RO          173    .text.ESP_ConnectWiFi  esp.o
+    0x080015e4   0x080015e4   0x0000005c   Code   RO          169    .text.ESP_Init      esp.o
+    0x08001640   0x08001640   0x00000042   Code   RO          177    .text.ESP_OpenTCP   esp.o
+    0x08001682   0x08001682   0x00000002   PAD
+    0x08001684   0x08001684   0x00000036   Code   RO          171    .text.ESP_SendAT    esp.o
+    0x080016ba   0x080016ba   0x00000002   PAD
+    0x080016bc   0x080016bc   0x00000076   Code   RO          179    .text.ESP_SendData  esp.o
+    0x08001732   0x08001732   0x00000002   PAD
+    0x08001734   0x08001734   0x00000088   Code   RO          183    .text.ESP_UART_ReadResponse  esp.o
+    0x080017bc   0x080017bc   0x00000018   Code   RO          181    .text.ESP_UART_SendString  esp.o
+    0x080017d4   0x080017d4   0x0000003c   Code   RO          175    .text.ESP_WiFiStatus  esp.o
+    0x08001810   0x08001810   0x00000124   Code   RO           34    .text.GPIO_clock_enable  gpio_driver.o
+    0x08001934   0x08001934   0x000000aa   Code   RO           32    .text.GPIO_init     gpio_driver.o
+    0x080019de   0x080019de   0x00000002   PAD
+    0x080019e0   0x080019e0   0x00000154   Code   RO           68    .text.I2C_init      i2c_driver.o
+    0x08001b34   0x08001b34   0x00000030   Code   RO           76    .text.I2C_read_nack  i2c_driver.o
+    0x08001b64   0x08001b64   0x000000bc   Code   RO           70    .text.I2C_start     i2c_driver.o
+    0x08001c20   0x08001c20   0x00000012   Code   RO           78    .text.I2C_stop      i2c_driver.o
+    0x08001c32   0x08001c32   0x00000002   PAD
+    0x08001c34   0x08001c34   0x00000034   Code   RO           72    .text.I2C_write     i2c_driver.o
+    0x08001c68   0x08001c68   0x00000014   Code   RO          144    .text.SSD1306_clear  ssd1306.o
+    0x08001c7c   0x08001c7c   0x000000b6   Code   RO          150    .text.SSD1306_draw_char  ssd1306.o
+    0x08001d32   0x08001d32   0x00000002   PAD
+    0x08001d34   0x08001d34   0x00000088   Code   RO          148    .text.SSD1306_draw_pixel  ssd1306.o
+    0x08001dbc   0x08001dbc   0x0000003c   Code   RO          152    .text.SSD1306_draw_string  ssd1306.o
+    0x08001df8   0x08001df8   0x000000f8   Code   RO          142    .text.SSD1306_init  ssd1306.o
+    0x08001ef0   0x08001ef0   0x00000060   Code   RO          146    .text.SSD1306_update  ssd1306.o
+    0x08001f50   0x08001f50   0x00000032   Code   RO          138    .text.SSD1306_write_command  ssd1306.o
+    0x08001f82   0x08001f82   0x00000002   PAD
+    0x08001f84   0x08001f84   0x0000005c   Code   RO          140    .text.SSD1306_write_data  ssd1306.o
+    0x08001fe0   0x08001fe0   0x00000012   Code   RO          205    .text.SystemInit    system_stm32f4xx.o
+    0x08001ff2   0x08001ff2   0x00000002   PAD
+    0x08001ff4   0x08001ff4   0x00000118   Code   RO           87    .text.TIM_PWM_init  tim_driver.o
+    0x0800210c   0x0800210c   0x0000005c   Code   RO           91    .text.TIM_PWM_set_duty  tim_driver.o
+    0x08002168   0x08002168   0x00000114   Code   RO          127    .text.TSL2591_calculate_lux  tsl2591.o
+    0x0800227c   0x0800227c   0x0000001e   Code   RO          121    .text.TSL2591_init  tsl2591.o
+    0x0800229a   0x0800229a   0x00000002   PAD
+    0x0800229c   0x0800229c   0x0000004e   Code   RO          119    .text.TSL2591_read  tsl2591.o
+    0x080022ea   0x080022ea   0x00000002   PAD
+    0x080022ec   0x080022ec   0x0000002e   Code   RO          123    .text.TSL2591_read_ch0  tsl2591.o
+    0x0800231a   0x0800231a   0x00000002   PAD
+    0x0800231c   0x0800231c   0x0000002e   Code   RO          125    .text.TSL2591_read_ch1  tsl2591.o
+    0x0800234a   0x0800234a   0x00000002   PAD
+    0x0800234c   0x0800234c   0x00000042   Code   RO          117    .text.TSL2591_write  tsl2591.o
+    0x0800238e   0x0800238e   0x00000002   PAD
+    0x08002390   0x08002390   0x0000001e   Code   RO          106    .text.USART_ReceiveChar  usart_driver.o
+    0x080023ae   0x080023ae   0x00000002   PAD
+    0x080023b0   0x080023b0   0x00000024   Code   RO          102    .text.USART_SendChar  usart_driver.o
+    0x080023d4   0x080023d4   0x00000026   Code   RO          104    .text.USART_SendString  usart_driver.o
+    0x080023fa   0x080023fa   0x00000002   PAD
+    0x080023fc   0x080023fc   0x0000014c   Code   RO          100    .text.USART_init    usart_driver.o
+    0x08002548   0x08002548   0x000001f6   Code   RO           89    .text.enable_tim_clock  tim_driver.o
+    0x0800273e   0x0800273e   0x00000002   PAD
+    0x08002740   0x08002740   0x0000005a   Code   RO           44    .text.gpio_config_alt_func  gpio_driver.o
+    0x0800279a   0x0800279a   0x00000002   PAD
+    0x0800279c   0x0800279c   0x00000036   Code   RO           36    .text.gpio_config_mode  gpio_driver.o
+    0x080027d2   0x080027d2   0x00000002   PAD
+    0x080027d4   0x080027d4   0x00000032   Code   RO           38    .text.gpio_config_otype  gpio_driver.o
+    0x08002806   0x08002806   0x00000002   PAD
+    0x08002808   0x08002808   0x00000036   Code   RO           42    .text.gpio_config_pupd  gpio_driver.o
+    0x0800283e   0x0800283e   0x00000002   PAD
+    0x08002840   0x08002840   0x00000036   Code   RO           40    .text.gpio_config_speed  gpio_driver.o
+    0x08002876   0x08002876   0x00000002   PAD
+    0x08002878   0x08002878   0x0000040a   Code   RO            4    .text.main          main.o
+    0x08002c82   0x08002c82   0x00000002   PAD
+    0x08002c84   0x08002c84   0x0000006e   Code   RO            2    .text.scale_lux_to_pwm  main.o
+    0x08002cf2   0x08002cf2   0x0000003e   Code   RO          385    CL$$btod_d2e        c_w.l(btod.o)
+    0x08002d30   0x08002d30   0x00000046   Code   RO          387    CL$$btod_d2e_denorm_low  c_w.l(btod.o)
+    0x08002d76   0x08002d76   0x00000060   Code   RO          386    CL$$btod_d2e_norm_op1  c_w.l(btod.o)
+    0x08002dd6   0x08002dd6   0x00000002   PAD
+    0x08002dd8   0x08002dd8   0x00000338   Code   RO          395    CL$$btod_div_common  c_w.l(btod.o)
+    0x08003110   0x08003110   0x000000dc   Code   RO          392    CL$$btod_e2e        c_w.l(btod.o)
+    0x080031ec   0x080031ec   0x0000002a   Code   RO          389    CL$$btod_ediv       c_w.l(btod.o)
+    0x08003216   0x08003216   0x0000002a   Code   RO          388    CL$$btod_emul       c_w.l(btod.o)
+    0x08003240   0x08003240   0x00000244   Code   RO          394    CL$$btod_mult_common  c_w.l(btod.o)
+    0x08003484   0x08003484   0x00000030   Code   RO          423    i.__ARM_fpclassify  m_wm.l(fpclassify.o)
+    0x080034b4   0x080034b4   0x0000000e   Code   RO          293    i._is_digit         c_w.l(__printf_wp.o)
+    0x080034c2   0x080034c2   0x00000002   PAD
+    0x080034c4   0x080034c4   0x0000002c   Code   RO          410    locale$$code        c_w.l(lc_numeric_c.o)
+    0x080034f0   0x080034f0   0x0000002c   Code   RO          433    locale$$code        c_w.l(lc_ctype_c.o)
+    0x0800351c   0x0800351c   0x0000001a   Code   RO          495    x$fpl$fpinit        fz_wm.l(fpinit.o)
+    0x08003536   0x08003536   0x00000004   Code   RO          328    x$fpl$printf1       fz_wm.l(printf1.o)
+    0x0800353a   0x0800353a   0x00000004   Code   RO          330    x$fpl$printf2       fz_wm.l(printf2.o)
+    0x0800353e   0x0800353e   0x00000000   Code   RO          422    x$fpl$usenofp       fz_wm.l(usenofp.o)
+    0x0800353e   0x0800353e   0x00000002   PAD
+    0x08003540   0x08003540   0x00000008   Data   RO          252    .constdata          c_w.l(_printf_wctomb.o)
+    0x08003548   0x08003548   0x00000028   Data   RO          281    .constdata          c_w.l(_printf_hex_int_ll_ptr.o)
+    0x08003570   0x08003570   0x00000011   Data   RO          301    .constdata          c_w.l(__printf_flags_ss_wp.o)
+    0x08003581   0x08003581   0x00000026   Data   RO          360    .constdata          c_w.l(_printf_fp_hex.o)
+    0x080035a7   0x080035a7   0x00000001   PAD
+    0x080035a8   0x080035a8   0x00000094   Data   RO          383    .constdata          c_w.l(bigflt0.o)
+    0x0800363c   0x0800363c   0x000002f8   Data   RO          163    .rodata.font8x8     font.o
+    0x08003934   0x08003934   0x000000bb   Data   RO           17    .rodata.str1.1      main.o
+    0x080039ef   0x080039ef   0x00000094   Data   RO          187    .rodata.str1.1      esp.o
+    0x08003a83   0x08003a83   0x00000001   PAD
+    0x08003a84   0x08003a84   0x00000020   Data   RO          570    Region$$Table       anon$$obj.o
+    0x08003aa4   0x08003aa4   0x0000001c   Data   RO          409    locale$$data        c_w.l(lc_numeric_c.o)
+    0x08003ac0   0x08003ac0   0x00000110   Data   RO          432    locale$$data        c_w.l(lc_ctype_c.o)
 
 
-    Execution Region ER_RW (Exec base: 0x20000000, Load base: 0x08003a20, Size: 0x0000000c, Max: 0xffffffff, ABSOLUTE)
+    Execution Region ER_RW (Exec base: 0x20000000, Load base: 0x08003bd0, Size: 0x0000000c, Max: 0xffffffff, ABSOLUTE)
 
     Exec Addr    Load Addr    Size         Type   Attr      Idx    E Section Name        Object
 
-    0x20000000   0x08003a20   0x00000001   Data   RW           15    .data.ESP_RX_PIN    main.o
-    0x20000001   0x08003a21   0x00000001   Data   RW           14    .data.ESP_TX_PIN    main.o
-    0x20000002   0x08003a22   0x00000001   Data   RW            8    .data.I2C_SCL_PIN_LIGHT  main.o
-    0x20000003   0x08003a23   0x00000001   Data   RW           10    .data.I2C_SCL_PIN_OLED  main.o
-    0x20000004   0x08003a24   0x00000001   Data   RW            9    .data.I2C_SDA_PIN_LIGHT  main.o
-    0x20000005   0x08003a25   0x00000001   Data   RW           11    .data.I2C_SDA_PIN_OLED  main.o
-    0x20000006   0x08003a26   0x00000001   Data   RW            6    .data.LED1_PIN      main.o
-    0x20000007   0x08003a27   0x00000001   Data   RW            7    .data.LED2_PIN      main.o
-    0x20000008   0x08003a28   0x00000004   Data   RW           13    .data.LUX_MAX       main.o
+    0x20000000   0x08003bd0   0x00000001   Data   RW           15    .data.ESP_RX_PIN    main.o
+    0x20000001   0x08003bd1   0x00000001   Data   RW           14    .data.ESP_TX_PIN    main.o
+    0x20000002   0x08003bd2   0x00000001   Data   RW            8    .data.I2C_SCL_PIN_LIGHT  main.o
+    0x20000003   0x08003bd3   0x00000001   Data   RW           10    .data.I2C_SCL_PIN_OLED  main.o
+    0x20000004   0x08003bd4   0x00000001   Data   RW            9    .data.I2C_SDA_PIN_LIGHT  main.o
+    0x20000005   0x08003bd5   0x00000001   Data   RW           11    .data.I2C_SDA_PIN_OLED  main.o
+    0x20000006   0x08003bd6   0x00000001   Data   RW            6    .data.LED1_PIN      main.o
+    0x20000007   0x08003bd7   0x00000001   Data   RW            7    .data.LED2_PIN      main.o
+    0x20000008   0x08003bd8   0x00000004   Data   RW           13    .data.LUX_MAX       main.o
 
 
-    Execution Region ER_ZI (Exec base: 0x20000010, Load base: 0x08003a2c, Size: 0x00000b68, Max: 0xffffffff, ABSOLUTE)
+    Execution Region ER_ZI (Exec base: 0x20000010, Load base: 0x08003bdc, Size: 0x00000b68, Max: 0xffffffff, ABSOLUTE)
 
     Exec Addr    Load Addr    Size         Type   Attr      Idx    E Section Name        Object
 
@@ -1609,7 +1626,7 @@ Memory Map of the image
     0x20000070        -       0x00000004   Zero   RW           12    .bss.LUX_MIN        main.o
     0x20000074        -       0x00000400   Zero   RW          154    .bss.buffer         ssd1306.o
     0x20000474        -       0x00000100   Zero   RW          188    .bss.esp_rx_buffer  esp.o
-    0x20000574   0x08003a2c   0x00000004   PAD
+    0x20000574   0x08003bdc   0x00000004   PAD
     0x20000578        -       0x00000200   Zero   RW          196    HEAP                startup_stm32f446xx.o
     0x20000778        -       0x00000400   Zero   RW          195    STACK               startup_stm32f446xx.o
 
@@ -1621,22 +1638,22 @@ Image component sizes
 
       Code (inc. data)   RO Data    RW Data    ZI Data      Debug   Object Name
 
-       434          0        148          0        256       2810   esp.o
-         0          0        760          0          0        516   font.o
-       764          0          0          0          0       4257   gpio_driver.o
-       646          0          0          0          0       3095   i2c_driver.o
-      1058          0         60         12          4       4006   main.o
-       884          0          0          0       1024       2879   ssd1306.o
-        64         26        452          0       1536        888   startup_stm32f446xx.o
-        18          0          0          0          0       2849   system_stm32f4xx.o
-       874          8          0          0          0       3150   tim_driver.o
-       542         20          0          0          0       2318   tsl2591.o
-       436          0          0          0          0       3096   usart_driver.o
+       646          0        148          0        256       2830   esp.o
+         0          0        760          0          0        536   font.o
+       764          0          0          0          0       4277   gpio_driver.o
+       646          0          0          0          0       3115   i2c_driver.o
+      1144          0        187         12          4       4243   main.o
+       884          0          0          0       1024       2899   ssd1306.o
+        64         26        452          0       1536        908   startup_stm32f446xx.o
+        18          0          0          0          0       2869   system_stm32f4xx.o
+       874          8          0          0          0       3170   tim_driver.o
+       542         20          0          0          0       2338   tsl2591.o
+       436          0          0          0          0       3116   usart_driver.o
 
     ----------------------------------------------------------------------
-      5758         54       1452         12       2824      29864   Object Totals
+      6062         54       1580         12       2824      30301   Object Totals
          0          0         32          0          0          0   (incl. Generated)
-        38          0          0          0          4          0   (incl. Padding)
+        44          0          1          0          4          0   (incl. Padding)
 
     ----------------------------------------------------------------------
 
@@ -1748,15 +1765,15 @@ Image component sizes
 
       Code (inc. data)   RO Data    RW Data    ZI Data      Debug   
 
-     12876        330       2004         12       2920      31988   Grand Totals
-     12876        330       2004         12       2920      31988   ELF Image Totals
-     12876        330       2004         12          0          0   ROM Totals
+     13180        330       2132         12       2920      32425   Grand Totals
+     13180        330       2132         12       2920      32425   ELF Image Totals
+     13180        330       2132         12          0          0   ROM Totals
 
 ==============================================================================
 
-    Total RO  Size (Code + RO Data)                14880 (  14.53kB)
+    Total RO  Size (Code + RO Data)                15312 (  14.95kB)
     Total RW  Size (RW Data + ZI Data)              2932 (   2.86kB)
-    Total ROM Size (Code + RO Data + RW Data)      14892 (  14.54kB)
+    Total ROM Size (Code + RO Data + RW Data)      15324 (  14.96kB)
 
 ==============================================================================
 
