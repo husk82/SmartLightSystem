@@ -207,7 +207,7 @@
 			if (ESP_OpenTCP("192.168.2.12", 5000)) 
 			{
 				ESP_SendData(post_data, post_len);
-				ESP_CloseTCP();
+				ESP_CloseTCP(); 
 			}
 		
 		}

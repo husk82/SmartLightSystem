@@ -7,9 +7,26 @@
 <body>
     <h1>Smart Light Monitor</h1>
     <div class="card">
-        {% if data.lux %}
-            <p><strong>Current Lux:</strong> {{ data.lux }}</p>
-            <p><strong>Last Updated:</strong> {{ data.timestamp }}</p>
+        {% if last_10_readings %}
+            <h3>Last 10 Lux Readings</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Lux Value</th>
+                        <th>Timestamp</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for i, reading in enumerate(last_10_readings, 1) %}
+                    <tr>
+                        <td>{{ i }}</td>
+                        <td>{{ reading.lux }}</td>
+                        <td>{{ reading.timestamp }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
         {% else %}
             <p>No data received yet.</p>
         {% endif %}
