@@ -1,5 +1,5 @@
 import psycopg2
-from .dbConfig import DB_CONFIG
+from dbConfig import DB_CONFIG
 
 def create_table():
     try:
@@ -15,7 +15,7 @@ def create_table():
             conn.commit()
         print ("Table 'lux_readings' created successfully")
     except Exception as e:
-        print("Error creating table: {e}"}
+        print("Error creating table: {e}")
     finally:
         if conn:
               conn.close()
