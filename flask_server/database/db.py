@@ -3,7 +3,7 @@ from .dbConfig import DB_CONFIG
 
 def get_connection():
     try:
-        conn = psycopg2.connect(**DB_CONFIG)
+        conn = psycopg2.connect(**DB_CONFIG)  # type: ignore if Pyright complains
         return conn
     except Exception as e:
         print(f"DB connection failed: {e}")
@@ -22,7 +22,7 @@ def insert_lux(lux, timestamp):
             conn.commit()
         return True
     except Exception as e:
-        print("Insertion failed: {e}")
+        print(f"Insertion failed: {e}")
         return False
     finally:
         conn.close()
@@ -38,9 +38,10 @@ def fetch_last_readings(limit=10):
                 FROM lux_readings
                 ORDER BY timestamp DESC
                 LIMIT %s
-            """,(limit,))
+            """, (limit,))
             rows = cur.fetchall()
-        return [{"lux:" row[0], "timestamp": row[1].strftime("%Y-%m-%d %H:%M:%S")} for row in rows]
+        return [{"lux": row[0], "timestamp": row[1].strftime("%Y-%m-%d %H:%M:%S")} for row in rows]
+
     except Exception as e:
         print(f"Fetch failed: {e}")
         return []

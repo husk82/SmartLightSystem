@@ -18,9 +18,9 @@
                     </tr>
                 </thead>
                 <tbody>
-                    {% for i, reading in enumerate(last_10_readings, 1) %}
+                    {% for reading in last_10_readings %}
                     <tr>
-                        <td>{{ i }}</td>
+                        <td>{{ loop.index }}</td>
                         <td>{{ reading.lux }}</td>
                         <td>{{ reading.timestamp }}</td>
                     </tr>

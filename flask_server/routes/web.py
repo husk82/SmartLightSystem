@@ -8,8 +8,8 @@ web_bp = Blueprint("web", __name__)
 def index():
     last_10_readings = fetch_last_readings()
     if not last_10_readings:
-        last_10_readings = [{"lux": "N/A", timestamp:"N/A"}]
-    return render_template("index.html", last_10_readings)
+        last_10_readings = [{"lux": "N/A", "timestamp":"N/A"}]
+    return render_template("index.html", last_10_readings=last_10_readings)
 
 @web_bp.route("/about")
 def about():

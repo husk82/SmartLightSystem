@@ -6,7 +6,7 @@ api_bp = Blueprint("api", __name__)
 
 latest_data = {"lux": None, "timestamp": None}
 
-@api_bp.route("/lux", method=["POST"])
+@api_bp.route("/lux", methods=["POST"])
 
 def receive_lux():
     try:
