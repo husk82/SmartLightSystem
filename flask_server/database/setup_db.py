@@ -1,7 +1,11 @@
 import psycopg2
+from typing import Optional
+from psycopg2.extensions import connection as _connection
 from dbConfig import DB_CONFIG
 
+
 def create_table():
+    conn: Optional[_connection] = None
     try:
         conn = psycopg2.connect(**DB_CONFIG)
         with conn.cursor() as cur:
@@ -17,7 +21,7 @@ def create_table():
     except Exception as e:
         print(f"Error creating table: {e}")
     finally:
-        if conn:
+        if conn is not None:
               conn.close()
 
 if __name__ == "__main__":
