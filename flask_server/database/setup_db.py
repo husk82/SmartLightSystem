@@ -1,7 +1,7 @@
 import psycopg2
 from typing import Optional
 from psycopg2.extensions import connection as _connection
-from dbConfig import DB_CONFIG
+from db_config import DB_CONFIG
 
 
 def create_table():
