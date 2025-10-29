@@ -3,3 +3,7 @@ venv/
 
 # STM32 secrets
 SECRETS_H.h
+
+# Database
+db_config.py
+
