@@ -2,6 +2,7 @@
 
 void EXTI_init(EXTI_config_t *exti_config)
 {
+	
 	// Enable SYSCFG clock
 	RCC->APB2ENR |= RCC_APB2ENR_SYSCFGEN;
 	
@@ -34,8 +35,14 @@ void EXTI_init(EXTI_config_t *exti_config)
 		NVIC_EnableIRQ(EXTI15_10_IRQn);
 }
 
+bool EXTI_is_pending(uint8_t pin_no)
+{
+    return (EXTI->PR & (1 << pin_no)) != 0;
+}
+
 void EXTI_clear_pending(uint8_t pin_no)
 {
 	if (EXTI->PR & (1 << pin_no))
 		EXTI->PR |= (1 << pin_no);
 }
+

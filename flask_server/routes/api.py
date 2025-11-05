@@ -19,12 +19,12 @@ def receive_lux():
         latest_data["timestamp"] = timestamp.strftime("%Y-%m-%d %H:%M:%S")
 
         if insert_lux(lux, timestamp):
-            print("Received LUX: {lux}")
+            print(f"Received LUX: {lux}")
             return jsonify({"status": "success", "lux": lux})
         else:
             return jsonify({"status": "error", "message": "DB insert failed"}),500
     except Exception as e:
-        return jsonify({"stauts": "error", "message": str(e)}), 500
+        return jsonify({"status": "error", "message": str(e)}), 500
 
     
 

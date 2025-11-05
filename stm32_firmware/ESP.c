@@ -70,8 +70,11 @@ bool ESP_SendData(const char *data, uint16_t len) {
     char cmd[32];
     snprintf(cmd, sizeof(cmd), "AT+CIPSEND=%d", len);
     if (!ESP_SendAT(cmd, ">", 50000)) return false;
+
     ESP_UART_SendString(data);
+
     char *resp = ESP_UART_ReadResponse(100000);
+    // Check if ESP confirms send
     return (strstr(resp, "SEND OK") != NULL);
 }
 

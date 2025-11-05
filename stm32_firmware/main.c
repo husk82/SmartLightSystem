@@ -1,227 +1,196 @@
-	#include "stm32f446xx.h"
-	#include "GPIO_Driver_H.h"
-	#include "EXTI_Driver.h"
-	#include "I2C_Driver_H.h"
-	#include "TSL2591_H.h"
-	#include "TIM_Driver_H.h"
-	#include "USART_Driver_H.h"
-	#include "ESP_H.h"
-	#include "SSD1306_H.h"
-	#include <stdio.h>
-	#include <string.h>
+#include "stm32f446xx.h"
+#include "GPIO_Driver_H.h"
+#include "EXTI_Driver.h"
+#include "I2C_Driver_H.h"
+#include "TSL2591_H.h"
+#include "TIM_Driver_H.h"
+#include "USART_Driver_H.h"
+#include "ESP_H.h"
+#include "SSD1306_H.h"
+#include <stdio.h>
+#include <stdbool.h>
+#include <string.h>
 
-	// Global variables for PINS
-	uint8_t LED1_PIN = 6;
-	uint8_t LED2_PIN = 7;
-	uint8_t I2C_SCL_PIN_LIGHT = 8;
-	uint8_t I2C_SDA_PIN_LIGHT = 9;
-	uint8_t I2C_SCL_PIN_OLED = 10;
-	uint8_t I2C_SDA_PIN_OLED = 3;
-	uint32_t LUX_MIN = 0;
-	uint32_t LUX_MAX = 1500;
-	uint8_t ESP_TX_PIN = 9;  
-  uint8_t ESP_RX_PIN = 10; 
-	
-	// === Helper Functions === //
-	uint32_t scale_lux_to_pwm(uint32_t lux) {
-    if (lux < LUX_MIN) lux = LUX_MIN;
-    if (lux > LUX_MAX) lux = LUX_MAX;
-    
-    return 999 - (lux - LUX_MIN) * 999 / (LUX_MAX - LUX_MIN);
-	}
-	
-	// ====== MAIN ====== //
-	int main (void)
-	{
-	// --- Led Pin Config---
-	// Configure PA6 as TIM3 led1
-	GPIO_config_t led1;
-	led1.pin_no    = LED1_PIN;
-	led1.mode      = GPIO_MODE_ALTFN;
-	led1.oType     = GPIO_OUTPUT_PP;
-	led1.speed     = GPIO_SPEED_LOW;
-	led1.pull      = GPIO_NO_PUPD;
-	led1.altFunc   = GPIO_AF2;  
+// ===== Pin Definitions =====
+#define USER_BUTTON_PIN 13
+#define USER_BUTTON_PORT_CODE 2 // Port C
+#define LED1_PIN 6
+#define LED2_PIN 7
+#define I2C_SCL_PIN_LIGHT 8
+#define I2C_SDA_PIN_LIGHT 9
+#define I2C_SCL_PIN_OLED 10
+#define I2C_SDA_PIN_OLED 3
+#define ESP_TX_PIN 9
+#define ESP_RX_PIN 10
 
+#define LUX_MIN 0
+#define LUX_MAX 1500
+
+// ===== Global Variables =====
+volatile bool button_pressed = false;
+uint32_t latest_lux = 0;
+
+// ===== Helper Functions =====
+uint32_t scale_lux_to_pwm(uint32_t lux) 
+{
+	if (lux < LUX_MIN) lux = LUX_MIN;
+	if (lux > LUX_MAX) lux = LUX_MAX;
+	return 999 - (lux - LUX_MIN) * 999 / (LUX_MAX - LUX_MIN);
+}
+
+void EXTI15_10_IRQHandler(void)
+{
+  if (EXTI_is_pending(USER_BUTTON_PIN))   // Check pending using driver
+  {
+		EXTI_clear_pending(USER_BUTTON_PIN); // Clear pending using driver
+    button_pressed = true;
+  }
+}
+
+// ===== Button Initialization =====
+void User_button_Init(void) 
+{
+	GPIO_config_t btn_cfg = {
+		.pin_no = USER_BUTTON_PIN,
+		.mode = GPIO_MODE_INPUT,
+		.pull = GPIO_PULL_UP
+	};
+	GPIO_init(GPIOC, &btn_cfg);
+
+	EXTI_config_t exti_cfg = {  
+		.pin_no       = USER_BUTTON_PIN,  
+		.port_code    = USER_BUTTON_PORT_CODE,  
+		.trigger_type = FALLING_EDGE  
+	};  
+	EXTI_init(&exti_cfg);  
+}
+
+// ===== LED PWM Initialization =====
+void LED_PWM_Init(TIM_PWM_Config_t *pwm1, TIM_PWM_Config_t *pwm2) 
+{
+	GPIO_config_t led1 = {LED1_PIN, GPIO_MODE_ALTFN, GPIO_OUTPUT_PP, GPIO_SPEED_LOW, GPIO_NO_PUPD, GPIO_AF2};
 	GPIO_init(GPIOA, &led1);
+	pwm1->Instance = TIM3; pwm1->Prescaler = 89; pwm1->Period = 999; pwm1->Channel = TIM_CHANNEL_1;
+	TIM_PWM_init(pwm1);
 
-	// Configure PA7 as TIM3 led2
-	GPIO_config_t led2;
-	led2.pin_no    = LED2_PIN;
-	led2.mode      = GPIO_MODE_ALTFN;
-	led2.oType     = GPIO_OUTPUT_PP;
-	led2.speed     = GPIO_SPEED_LOW;
-	led2.pull      = GPIO_NO_PUPD;
-	led2.altFunc   = GPIO_AF2;
+	GPIO_config_t led2 = {LED2_PIN, GPIO_MODE_ALTFN, GPIO_OUTPUT_PP, GPIO_SPEED_LOW, GPIO_NO_PUPD, GPIO_AF2};  
+	GPIO_init(GPIOA, &led2);  
+	pwm2->Instance = TIM3; pwm2->Prescaler = 89; pwm2->Period = 999; pwm2->Channel = TIM_CHANNEL_2;  
+	TIM_PWM_init(pwm2);  
 
-	GPIO_init(GPIOA, &led2);
+}
 
-	// --- TIM Congif ---
-	// Config PA6 as TIM3 Channel 1
-	TIM_PWM_Config_t pwm1;
-	pwm1.Instance = TIM3;
-	pwm1.Prescaler = 89;        // 90 MHz / 90 = 1 MHz
-	pwm1.Period = 999;          // 1 MHz / 1000 = 1 kHz PWM
-	pwm1.Channel = TIM_CHANNEL_1;
+// ===== I2C Initialization =====
+void I2C_InitAll(void) 
+{
+	GPIO_config_t scl_light = {I2C_SCL_PIN_LIGHT, GPIO_MODE_ALTFN, GPIO_OUTPUT_OD, GPIO_SPEED_HIGH, GPIO_PULL_UP, GPIO_AF4};
+	GPIO_config_t sda_light = {I2C_SDA_PIN_LIGHT, GPIO_MODE_ALTFN, GPIO_OUTPUT_OD, GPIO_SPEED_HIGH, GPIO_PULL_UP, GPIO_AF4};
+	GPIO_config_t scl_oled = {I2C_SCL_PIN_OLED, GPIO_MODE_ALTFN, GPIO_OUTPUT_OD, GPIO_SPEED_HIGH, GPIO_PULL_UP, GPIO_AF4};
+	GPIO_config_t sda_oled = {I2C_SDA_PIN_OLED, GPIO_MODE_ALTFN, GPIO_OUTPUT_OD, GPIO_SPEED_HIGH, GPIO_PULL_UP, GPIO_AF4};
 
-	TIM_PWM_init(&pwm1);
+	GPIO_init(GPIOB, &scl_light);  
+	GPIO_init(GPIOB, &sda_light);  
+	GPIO_init(GPIOB, &scl_oled);  
+	GPIO_init(GPIOB, &sda_oled);  
 
-	// Config PA7 as TIM3 Channel 2
-	TIM_PWM_Config_t pwm2;
-	pwm2.Instance = TIM3;
-	pwm2.Prescaler = 89;        // 90 MHz / 90 = 1 MHz
-	pwm2.Period = 999;          // 1 MHz / 1000 = 1 kHz PWM
-	pwm2.Channel = TIM_CHANNEL_2;
+	I2C_init(I2C1, 16000000, 100000);  
+	I2C_init(I2C2, 16000000, 100000);  
 
-	TIM_PWM_init(&pwm2);
+}
 
-	// --- I2C Pin Config --
-	// Configure PB8 as I2C SCL
-	GPIO_config_t scl_light;
-	scl_light.pin_no = I2C_SCL_PIN_LIGHT;
-	scl_light.mode = GPIO_MODE_ALTFN;
-	scl_light.oType = GPIO_OUTPUT_OD;
-	scl_light.speed = GPIO_SPEED_HIGH;
-	scl_light.pull = GPIO_PULL_UP;
-	scl_light.altFunc = GPIO_AF4;
-
-	GPIO_init(GPIOB, &scl_light);
-
-	// Configure PB9 as I2C SCL
-	GPIO_config_t sda_light;
-	sda_light.pin_no = I2C_SDA_PIN_LIGHT;
-	sda_light.mode = GPIO_MODE_ALTFN;
-	sda_light.oType = GPIO_OUTPUT_OD;
-	sda_light.speed = GPIO_SPEED_HIGH;
-	sda_light.pull = GPIO_PULL_UP;
-	sda_light.altFunc = GPIO_AF4;
-
-	GPIO_init(GPIOB, &sda_light);
-
-	// Configure PB10 as I2C SCL
-	GPIO_config_t scl_oled;
-	scl_oled.pin_no = I2C_SCL_PIN_OLED;
-	scl_oled.mode = GPIO_MODE_ALTFN;
-	scl_oled.oType = GPIO_OUTPUT_OD;
-	scl_oled.speed = GPIO_SPEED_HIGH;
-	scl_oled.pull = GPIO_PULL_UP;
-	scl_oled.altFunc = GPIO_AF4;
-
-	GPIO_init(GPIOB, &scl_oled);
-
-	// Configure PB3 as I2C SDA
-	GPIO_config_t sda_oled;
-	sda_oled.pin_no = I2C_SDA_PIN_OLED;
-	sda_oled.mode = GPIO_MODE_ALTFN;
-	sda_oled.oType = GPIO_OUTPUT_OD;
-	sda_oled.speed = GPIO_SPEED_HIGH;
-	sda_oled.pull = GPIO_PULL_UP;
-	sda_oled.altFunc = GPIO_AF4;
-
-	GPIO_init(GPIOB, &sda_oled);
-	
-	// Configure PA9 as USART1 TX
-	GPIO_config_t tx_pin;
-	
-	tx_pin.pin_no = ESP_TX_PIN;
-	tx_pin.mode = GPIO_MODE_ALTFN;
-	tx_pin.oType = GPIO_OUTPUT_PP;
-	tx_pin.speed = GPIO_SPEED_HIGH;
-	tx_pin.pull = GPIO_NO_PUPD;
-	tx_pin.altFunc = GPIO_AF7;   // USART1 TX
-	
+// ===== USART Initialization =====
+void USART_InitAll(void) 
+{
+	GPIO_config_t tx_pin = {ESP_TX_PIN, GPIO_MODE_ALTFN, GPIO_OUTPUT_PP, GPIO_SPEED_HIGH, GPIO_NO_PUPD, GPIO_AF7};
+	GPIO_config_t rx_pin = {ESP_RX_PIN, GPIO_MODE_ALTFN, GPIO_OUTPUT_PP, GPIO_SPEED_HIGH, GPIO_NO_PUPD, GPIO_AF7};
 	GPIO_init(GPIOA, &tx_pin);
-	
-	// Configure PA10 as USART1 TX
-	GPIO_config_t rx_pin;
-	
-	rx_pin.pin_no = ESP_RX_PIN;
-	rx_pin.mode = GPIO_MODE_ALTFN;
-	rx_pin.oType = GPIO_OUTPUT_PP;
-	rx_pin.speed = GPIO_SPEED_HIGH;
-	rx_pin.pull = GPIO_NO_PUPD;
-	rx_pin.altFunc = GPIO_AF7;   // USART1 RX
-	
 	GPIO_init(GPIOA, &rx_pin);
 
-	// Initiating I2C communication
-	I2C_init(I2C1, 16000000, 100000);
-	I2C_init(I2C2, 16000000, 100000);
+	USART_Config_t usart_cfg = {115200, 8, USART_STOPBITS_1, USART_PARITY_DISABLE, USART_MODE_TXRX, USART_HW_FLOW_CTRL_NONE};  
+	USART_init(USART1, &usart_cfg);  
 
-	// Init sensor
-	TSL2591_init(I2C1);
+}
 
-	// Init OLED
-	SSD1306_init(I2C2);
-	
-	// Init USART
-	USART_Config_t usart_cfg = {115200, 8, USART_STOPBITS_1, USART_PARITY_DISABLE, USART_MODE_TXRX, USART_HW_FLOW_CTRL_NONE};
-  USART_init(USART1, &usart_cfg); 
-	
-	// --- ESP Init Status ---
-  bool esp_ok = ESP_Init(); // your ESP_Init should use USART1
-  char esp_status[16];
-	
-	// --- ESP Connect to wifi ----
-	if (esp_ok) ESP_ConnectWiFi();
-	char wifi_status[16];
+// ===== Main =====
+int main(void) 
+{
+	TIM_PWM_Config_t pwm1, pwm2;
 
-	while (1)
-	{	
-		char buffer1[32];
-		uint16_t ch0 = TSL2591_read_ch0(I2C1);
-		uint16_t ch1 = TSL2591_read_ch1(I2C1);
+	LED_PWM_Init(&pwm1, &pwm2);  
+	I2C_InitAll();  
+	TSL2591_init(I2C1);  
+	SSD1306_init(I2C2);  
+	USART_InitAll();  
+	User_button_Init();  
 
-		if (ch0 >= TSL2591_ADC_MAX || ch1 >= TSL2591_ADC_MAX)  // ALS Saturation bit
-		{
-			sprintf(buffer1, "DATA OVERFLOW");
-		}
+	bool esp_ok = ESP_Init();  
+	if (esp_ok) ESP_ConnectWiFi();  
+
+	char buffer1[32], esp_status[16], wifi_status[16], post_status[16];  
+
+	while (1) 
+	{  
+		// --- Read Sensor ---  
+		uint16_t ch0 = TSL2591_read_ch0(I2C1);  
+		uint16_t ch1 = TSL2591_read_ch1(I2C1);  
+
+		if (ch0 >= TSL2591_ADC_MAX || ch1 >= TSL2591_ADC_MAX) 
+		{  
+			sprintf(buffer1, "DATA OVERFLOW");  
+			latest_lux = LUX_MAX;  
+		} 
 		else 
-		{
-			uint32_t lux = TSL2591_calculate_lux(ch0, ch1);
-
-			uint32_t duty = scale_lux_to_pwm(lux);
-				
+		{  
+			latest_lux = TSL2591_calculate_lux(ch0, ch1);  
+			uint32_t duty = scale_lux_to_pwm(latest_lux);  
 			TIM_PWM_set_duty(&pwm1, duty);  
-			TIM_PWM_set_duty(&pwm2, 999 - duty); 
+			TIM_PWM_set_duty(&pwm2, 999 - duty);  
+			sprintf(buffer1, "Lux: %lu", latest_lux);  
+		}  
 
-			sprintf(buffer1, "Lux: %u", lux);
-			
-			if (esp_ok) sprintf(esp_status, "ESP: OK");
-			else sprintf(esp_status, "ESP: FAIL");
-			
-			if (ESP_WiFiStatus()) sprintf(wifi_status, "WiFi: OK");
-			else sprintf(wifi_status, "WiFi: FAIL");
-			
-			char json_payload[32];
-			int json_len = snprintf(json_payload, sizeof(json_payload), "{\"lux\": %lu}", lux);
+		// --- Update Status ---  
+		sprintf(esp_status, esp_ok ? "ESP: OK" : "ESP: FAIL");  
+		sprintf(wifi_status, ESP_WiFiStatus() ? "WiFi: OK" : "WiFi: FAIL");   
 
-			char post_data[128];
-			int post_len = snprintf(post_data, sizeof(post_data),
-					"POST /api/lux HTTP/1.1\r\n"
-					"Host: 192.168.2.12\r\n"
-					"Content-Type: application/json\r\n"
-					"Content-Length: %d\r\n\r\n%s",
-					json_len, json_payload);
-
-			if (ESP_OpenTCP("192.168.2.12", 5000)) 
-			{
-				ESP_SendData(post_data, post_len);
-				ESP_CloseTCP(); 
-			}
-		
-		}
-
-		for (volatile int i = 0; i < 100000; ++i); // Small delay
-
-		// Display Hello World
+		// --- Update OLED ---   
 		SSD1306_clear();
-		SSD1306_draw_string(0, 0, buffer1);
-		SSD1306_draw_string(0, 8, esp_status);
-		SSD1306_draw_string(0, 16, wifi_status);
-		SSD1306_update(I2C2);
-	}
+		SSD1306_draw_string(0, 0, buffer1);  
+		SSD1306_draw_string(0, 8, esp_status);  
+		SSD1306_draw_string(0, 16, wifi_status);   
+		SSD1306_draw_string(0, 24, post_status); 
+		
+		// --- Send Data on Button Press ---  
+		if (button_pressed) {  
+			char json_payload[32];  
+			int json_len = snprintf(json_payload, sizeof(json_payload), "{\"lux\": %lu}", latest_lux);  
 
-	return 0;
-	}
+			char post_data[128];  
+			int post_len = snprintf(post_data, sizeof(post_data),  
+				"POST /api/lux HTTP/1.1\r\n"  
+				"Host: 192.168.2.12\r\n"  
+				"Content-Type: application/json\r\n"  
+				"Content-Length: %d\r\n\r\n%s",  
+				json_len, json_payload);  
 
+			if (ESP_OpenTCP("192.168.2.12", 5000)) {  
+				if (ESP_SendData(post_data, post_len)) 
+				{
+					sprintf(post_status, "POST Sent");
+				} else {
+					sprintf(post_status, "POST Failed");
+				}			
+				ESP_CloseTCP();  
+			}  
+			// Show message on OLED 
+			SSD1306_draw_string(0, 32, "Button Pressed!");
+			button_pressed = false;  
+		} 
+		SSD1306_update(I2C2); 
+
+		// --- Small Delay ---  
+		for (volatile int i = 0; i < 500000; ++i);
+		
+	}  
+	return 0;  
+
+}
