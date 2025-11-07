@@ -65,6 +65,15 @@ void User_button_Init(void)
 	EXTI_init(&exti_cfg);  
 }
 
+// ===== Using button flag as callback to TIM ====
+void send_lux_callback(void)
+{
+	button_pressed = true;
+}
+
+// ===== TIM Periodic Initialization =====
+TIM_Periodic_Config_t tim2_cfg = {TIM2, 16000-1, 600000-1, send_lux_callback};
+
 // ===== LED PWM Initialization =====
 void LED_PWM_Init(TIM_PWM_Config_t *pwm1, TIM_PWM_Config_t *pwm2) 
 {
@@ -114,8 +123,9 @@ void USART_InitAll(void)
 // ===== Main =====
 int main(void) 
 {
+	TIM_Periodic_set_global(&tim2_cfg);
+	TIM_Periodic_init(&tim2_cfg);
 	TIM_PWM_Config_t pwm1, pwm2;
-
 	LED_PWM_Init(&pwm1, &pwm2);  
 	I2C_InitAll();  
 	TSL2591_init(I2C1);  
@@ -126,7 +136,7 @@ int main(void)
 	bool esp_ok = ESP_Init();  
 	if (esp_ok) ESP_ConnectWiFi();  
 
-	char buffer1[32], esp_status[16], wifi_status[16], post_status[16];  
+	char buffer1[32], esp_status[16], wifi_status[16],post_status[16];  
 
 	while (1) 
 	{  
@@ -150,7 +160,8 @@ int main(void)
 
 		// --- Update Status ---  
 		sprintf(esp_status, esp_ok ? "ESP: OK" : "ESP: FAIL");  
-		sprintf(wifi_status, ESP_WiFiStatus() ? "WiFi: OK" : "WiFi: FAIL");   
+		sprintf(wifi_status, ESP_WiFiStatus() ? "WiFi: OK" : "WiFi: FAIL");  
+		strcpy(post_status, "POST IDLE");		
 
 		// --- Update OLED ---   
 		SSD1306_clear();
@@ -167,12 +178,12 @@ int main(void)
 			char post_data[128];  
 			int post_len = snprintf(post_data, sizeof(post_data),  
 				"POST /api/lux HTTP/1.1\r\n"  
-				"Host: 192.168.2.12\r\n"  
+				"Host: 192.168.2.22\r\n"  
 				"Content-Type: application/json\r\n"  
 				"Content-Length: %d\r\n\r\n%s",  
 				json_len, json_payload);  
 
-			if (ESP_OpenTCP("192.168.2.12", 5000)) {  
+			if (ESP_OpenTCP("192.168.2.22", 5050)) {  
 				if (ESP_SendData(post_data, post_len)) 
 				{
 					sprintf(post_status, "POST Sent");
@@ -182,7 +193,8 @@ int main(void)
 				ESP_CloseTCP();  
 			}  
 			// Show message on OLED 
-			SSD1306_draw_string(0, 32, "Button Pressed!");
+			SSD1306_draw_string(0, 24, post_status);
+			SSD1306_draw_string(0, 32, "POST Initiated!!");		
 			button_pressed = false;  
 		} 
 		SSD1306_update(I2C2); 

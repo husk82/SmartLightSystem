@@ -34,6 +34,8 @@ static void enable_tim_clock(TIM_TypeDef *instance)
 	}
 }
 
+//-------- TIM PWM -----------
+
 void TIM_PWM_init(TIM_PWM_Config_t *config)
 {
 	// Enable Timer clock
@@ -98,4 +100,41 @@ void TIM_PWM_set_duty(TIM_PWM_Config_t *config, uint32_t dutyCycle) {
 	}
 }
 
+//----------TIM PERIODIC-----------
+
+// ===== Periodic timer global pointer =====
+TIM_Periodic_Config_t *g_periodic_timer = NULL;
+
+void TIM_Periodic_set_global(TIM_Periodic_Config_t *config)
+{
+	g_periodic_timer = config;
+}
+
+void TIM_Periodic_init(TIM_Periodic_Config_t *config)
+{
+	enable_tim_clock(config->Instance);
+	
+	config->Instance->PSC = config->Prescaler;
+	config->Instance->ARR = config->Period;
+	
+	config->Instance->DIER |= TIM_DIER_UIE;
+	
+	config->Instance->CR1 |= TIM_CR1_CEN;
+	
+	if (config->Instance == TIM2) NVIC_EnableIRQ(TIM2_IRQn);
+	else if (config->Instance == TIM3) NVIC_EnableIRQ(TIM3_IRQn);
+	else if (config->Instance == TIM4) NVIC_EnableIRQ(TIM4_IRQn);
+	// --TO BE ADDED IF NEEDED
+}
+
+// -----IRQ Handlers----- ONLY FOR TIM2 right now
+void TIM2_IRQHandler(void)
+{
+	if (TIM2->SR & TIM_SR_UIF)
+	{
+		TIM2->SR &= ~TIM_SR_UIF;
+		if (g_periodic_timer && g_periodic_timer->Callback)
+			g_periodic_timer->Callback();
+	}
+}
 
